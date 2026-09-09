@@ -8,7 +8,6 @@ import (
 	"fintech-wallet/backend/internal/response"
 
 	"github.com/gin-gonic/gin"
-	"github.com/golang-jwt/jwt/v5"
 )
 
 func AuthMiddleware(jwtManager *auth.JWTManager) gin.HandlerFunc {
@@ -42,7 +41,7 @@ func AuthMiddleware(jwtManager *auth.JWTManager) gin.HandlerFunc {
 
 		tokenString := parts[1]
 
-		token, err := jwtManager.ValidateToken(tokenString)
+		claims, err := jwtManager.ValidateToken(tokenString)
 
 		if err != nil {
 			response.Error(
@@ -55,22 +54,9 @@ func AuthMiddleware(jwtManager *auth.JWTManager) gin.HandlerFunc {
 			return
 		}
 
-		claims, ok := token.Claims.(jwt.MapClaims)
-
-		if !ok {
-			response.Error(
-				c,
-				http.StatusUnauthorized,
-				"Invalid token claims",
-				"UNAUTHORIZED",
-			)
-			c.Abort()
-			return
-		}
-
-		c.Set("user_id", claims["user_id"])
-		c.Set("email", claims["email"])
-		c.Set("role", claims["role"])
+		c.Set("user_id", claims.UserID)
+		c.Set("email", claims.Email)
+		c.Set("role", claims.Role)
 
 		c.Next()
 	}

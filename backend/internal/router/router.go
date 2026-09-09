@@ -34,8 +34,8 @@ func SetupRouter(
 		userRepository,
 		refreshTokenRepository,
 		jwtManager,
+		db,
 	)
-
 	// Handler
 	userHandler := handler.NewUserHandler(userService)
 	authHandler := handler.NewAuthHandler(authService)
@@ -51,6 +51,11 @@ func SetupRouter(
 
 	router.POST("/api/v1/auth/register", authHandler.Register)
 	router.POST("/api/v1/auth/login", authHandler.Login)
+	router.POST(
+		"/api/v1/auth/refresh",
+		authHandler.Refresh,
+	)
+	router.POST("/api/v1/auth/logout", authHandler.Logout)
 
 	router.GET(
 		"/api/v1/auth/me",

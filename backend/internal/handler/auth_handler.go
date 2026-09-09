@@ -32,6 +32,10 @@ type LoginRequest struct {
 	Password string `json:"password" binding:"required,min=8,max=72"`
 }
 
+type RefreshRequest struct {
+	RefreshToken string `json:"refresh_token" binding:"required"`
+}
+
 func (handler *AuthHandler) Register(data *gin.Context) {
 	var request RegisterRequest
 
@@ -92,7 +96,7 @@ func (handler *AuthHandler) Login(data *gin.Context) {
 		return
 	}
 
-	token, err := handler.authService.Login(
+	result, err := handler.authService.Login(
 		request.Email,
 		request.Password,
 	)
@@ -122,7 +126,8 @@ func (handler *AuthHandler) Login(data *gin.Context) {
 		http.StatusOK,
 		"Login successful",
 		gin.H{
-			"token": token,
+			"access_token":  result.AccessToken,
+			"refresh_token": result.RefreshToken,
 		},
 	)
 }
@@ -140,7 +145,7 @@ func (h *AuthHandler) Me(c *gin.Context) {
 		return
 	}
 
-	userIDFloat, ok := userIDValue.(float64)
+	userID, ok := userIDValue.(uint)
 
 	if !ok {
 		response.Error(
@@ -151,8 +156,6 @@ func (h *AuthHandler) Me(c *gin.Context) {
 		)
 		return
 	}
-
-	userID := uint(userIDFloat)
 
 	user, err := h.authService.GetCurrentUser(userID)
 
@@ -181,5 +184,98 @@ func (h *AuthHandler) Me(c *gin.Context) {
 		http.StatusOK,
 		"User retrieved successfully",
 		user,
+	)
+}
+
+func (h *AuthHandler) Refresh(c *gin.Context) {
+	var request RefreshRequest
+
+	if err := c.ShouldBindJSON(&request); err != nil {
+		response.Error(
+			c,
+			http.StatusBadRequest,
+			"Invalid request",
+			"INVALID_REQUEST",
+		)
+		return
+	}
+
+	result, err := h.authService.Refresh(
+		request.RefreshToken,
+	)
+
+	if err != nil {
+		if errors.Is(err, service.ErrInvalidCredentials) {
+			response.Error(
+				c,
+				http.StatusUnauthorized,
+				"Invalid or expired refresh token",
+				"INVALID_REFRESH_TOKEN",
+			)
+			return
+		}
+
+		response.Error(
+			c,
+			http.StatusInternalServerError,
+			"Failed to refresh token",
+			"INTERNAL_SERVER_ERROR",
+		)
+		return
+	}
+
+	response.Success(
+		c,
+		http.StatusOK,
+		"Token refreshed successfully",
+		gin.H{
+			"access_token":  result.AccessToken,
+			"refresh_token": result.RefreshToken,
+		},
+	)
+}
+
+func (h *AuthHandler) Logout(c *gin.Context) {
+	var request RefreshRequest
+
+	if err := c.ShouldBindJSON(&request); err != nil {
+		response.Error(
+			c,
+			http.StatusBadRequest,
+			"Invalid request",
+			"INVALID_REQUEST",
+		)
+		return
+	}
+
+	err := h.authService.Logout(
+		request.RefreshToken,
+	)
+
+	if err != nil {
+		if errors.Is(err, service.ErrInvalidCredentials) {
+			response.Error(
+				c,
+				http.StatusUnauthorized,
+				"Invalid or expired refresh token",
+				"INVALID_REFRESH_TOKEN",
+			)
+			return
+		}
+
+		response.Error(
+			c,
+			http.StatusInternalServerError,
+			"Failed to logout",
+			"INTERNAL_SERVER_ERROR",
+		)
+		return
+	}
+
+	response.Success(
+		c,
+		http.StatusOK,
+		"Logout successful",
+		nil,
 	)
 }

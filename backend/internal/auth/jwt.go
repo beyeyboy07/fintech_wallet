@@ -11,6 +11,14 @@ type JWTManager struct {
 	secretKey string
 }
 
+type Claims struct {
+	UserID uint   `json:"user_id"`
+	Email  string `json:"email"`
+	Role   string `json:"role"`
+
+	jwt.RegisteredClaims
+}
+
 func NewJWTManager(secretKey string) *JWTManager {
 	return &JWTManager{
 		secretKey: secretKey,
@@ -23,12 +31,18 @@ func (m *JWTManager) GenerateToken(
 	role string,
 ) (string, error) {
 
-	claims := jwt.MapClaims{
-		"user_id": userID,
-		"email":   email,
-		"role":    role,
-		"exp":     time.Now().Add(24 * time.Hour).Unix(),
-		"iat":     time.Now().Unix(),
+	claims := Claims{
+		UserID: userID,
+		Email:  email,
+		Role:   role,
+		RegisteredClaims: jwt.RegisteredClaims{
+			ExpiresAt: jwt.NewNumericDate(
+				time.Now().Add(15 * time.Minute),
+			),
+			IssuedAt: jwt.NewNumericDate(
+				time.Now(),
+			),
+		},
 	}
 
 	token := jwt.NewWithClaims(
@@ -39,9 +53,15 @@ func (m *JWTManager) GenerateToken(
 	return token.SignedString([]byte(m.secretKey))
 }
 
-func (m *JWTManager) ValidateToken(tokenString string) (*jwt.Token, error) {
-	token, err := jwt.Parse(
+func (m *JWTManager) ValidateToken(
+	tokenString string,
+) (*Claims, error) {
+
+	claims := &Claims{}
+
+	token, err := jwt.ParseWithClaims(
 		tokenString,
+		claims,
 		func(token *jwt.Token) (interface{}, error) {
 
 			if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
@@ -60,5 +80,5 @@ func (m *JWTManager) ValidateToken(tokenString string) (*jwt.Token, error) {
 		return nil, errors.New("invalid token")
 	}
 
-	return token, nil
+	return claims, nil
 }

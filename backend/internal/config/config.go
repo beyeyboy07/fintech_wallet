@@ -26,7 +26,7 @@ func Load() Config {
 		log.Println(".env file not found, using environment variables")
 	}
 
-	return Config{
+	cfg := Config{
 		AppPort: getEnv("APP_PORT", "8080"),
 		AppEnv:  getEnv("APP_ENV", "development"),
 
@@ -35,8 +35,15 @@ func Load() Config {
 		DBUser:     getEnv("DB_USER", "root"),
 		DBPassword: getEnv("DB_PASSWORD", ""),
 		DBName:     getEnv("DB_NAME", "fintech_wallet"),
-		JWTSecret:  getEnv("JWT_SECRET", ""),
+
+		JWTSecret: getEnv("JWT_SECRET", ""),
 	}
+
+	if cfg.JWTSecret == "" {
+		log.Fatal("JWT_SECRET is required")
+	}
+
+	return cfg
 }
 
 func getEnv(key string, defaultValue string) string {
