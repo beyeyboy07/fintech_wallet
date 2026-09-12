@@ -17,6 +17,11 @@ type Config struct {
 	DBPassword string
 	DBName     string
 	JWTSecret  string
+
+	RedisHost     string
+	RedisPort     string
+	RedisPassword string
+	RedisDB       string
 }
 
 func Load() Config {
@@ -30,11 +35,15 @@ func Load() Config {
 		AppPort: getEnv("APP_PORT", "8080"),
 		AppEnv:  getEnv("APP_ENV", "development"),
 
-		DBHost:     getEnv("DB_HOST", "localhost"),
-		DBPort:     getEnv("DB_PORT", "3306"),
-		DBUser:     getEnv("DB_USER", "root"),
-		DBPassword: getEnv("DB_PASSWORD", ""),
-		DBName:     getEnv("DB_NAME", "fintech_wallet"),
+		DBHost:        getEnv("DB_HOST", "localhost"),
+		DBPort:        getEnv("DB_PORT", "3306"),
+		DBUser:        getEnv("DB_USER", "root"),
+		DBPassword:    getEnv("DB_PASSWORD", ""),
+		DBName:        getEnv("DB_NAME", "fintech_wallet"),
+		RedisHost:     getEnv("REDIS_HOST", "localhost"),
+		RedisPort:     getEnv("REDIS_PORT", "6379"),
+		RedisPassword: getEnv("REDIS_PASSWORD", ""),
+		RedisDB:       getEnv("REDIS_DB", "0"),
 
 		JWTSecret: getEnv("JWT_SECRET", ""),
 	}

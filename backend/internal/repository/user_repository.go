@@ -16,6 +16,12 @@ func NewUserRepository(db *gorm.DB) *UserRepository {
 	}
 }
 
+func (r *UserRepository) WithTx(tx *gorm.DB) *UserRepository {
+	return &UserRepository{
+		db: tx,
+	}
+}
+
 func (r *UserRepository) FindAll() ([]model.User, error) {
 	var users []model.User
 
@@ -28,25 +34,34 @@ func (r *UserRepository) FindAll() ([]model.User, error) {
 	return users, nil
 }
 
-func (data *UserRepository) FindByEmail(email string) (*model.User, error) {
+func (r *UserRepository) FindByEmail(
+	email string,
+) (*model.User, error) {
 
 	var user model.User
 
-	err := data.db.Where("email = ?", email).First(&user).Error
+	err := r.db.
+		Where("email = ?", email).
+		First(&user).
+		Error
 
 	if err != nil {
 		return nil, err
 	}
 
 	return &user, nil
-
 }
 
-func (data *UserRepository) Create(user *model.User) error {
-	return data.db.Create(user).Error
+func (r *UserRepository) Create(
+	user *model.User,
+) error {
+	return r.db.Create(user).Error
 }
 
-func (r *UserRepository) FindByID(id uint) (*model.User, error) {
+func (r *UserRepository) FindByID(
+	id uint,
+) (*model.User, error) {
+
 	var user model.User
 
 	err := r.db.First(&user, id).Error

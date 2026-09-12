@@ -25,21 +25,56 @@ func SetupRouter(
 	// Repository
 	userRepository := repository.NewUserRepository(db)
 	refreshTokenRepository := repository.NewRefreshTokenRepository(db)
+	walletRepository := repository.NewWalletRepository(db)
+	idempotencyRepository := repository.NewIdempotencyRepository(db)
 	// Service
 	userService := service.NewUserService(
 		userRepository,
 	)
 
+	transactionRepository := repository.NewTransactionRepository(db)
+
+	transactionEntryRepository := repository.NewTransactionEntryRepository(db)
+
+	transactionService := service.NewTransactionService(
+		transactionRepository,
+	)
+
+	transactionHandler := handler.NewTransactionHandler(
+		transactionService,
+	)
+
+	transferService := service.NewTransferService(
+		walletRepository,
+		transactionRepository,
+		transactionEntryRepository,
+		idempotencyRepository,
+		db,
+	)
+	transferHandler := handler.NewTransferHandler(
+		transferService,
+	)
+
+	walletService := service.NewWalletService(
+		walletRepository,
+		transactionRepository,
+		db,
+	)
+
 	authService := service.NewAuthService(
 		userRepository,
+		walletRepository,
 		refreshTokenRepository,
 		jwtManager,
 		db,
 	)
+
 	// Handler
 	userHandler := handler.NewUserHandler(userService)
 	authHandler := handler.NewAuthHandler(authService)
-
+	walletHandler := handler.NewWalletHandler(
+		walletService,
+	)
 	// Routes
 	router.GET("/api/v1/health", handler.Health)
 
@@ -61,6 +96,30 @@ func SetupRouter(
 		"/api/v1/auth/me",
 		middleware.AuthMiddleware(jwtManager),
 		authHandler.Me,
+	)
+
+	router.GET(
+		"/api/v1/wallet",
+		middleware.AuthMiddleware(jwtManager),
+		walletHandler.GetWallet,
+	)
+
+	router.POST(
+		"/api/v1/wallet/topup",
+		middleware.AuthMiddleware(jwtManager),
+		walletHandler.TopUp,
+	)
+
+	router.POST(
+		"/api/v1/transfers",
+		middleware.AuthMiddleware(jwtManager),
+		transferHandler.Transfer,
+	)
+
+	router.GET(
+		"/api/v1/transactions",
+		middleware.AuthMiddleware(jwtManager),
+		transactionHandler.GetTransactions,
 	)
 
 	return router

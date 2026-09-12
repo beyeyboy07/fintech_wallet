@@ -8,7 +8,6 @@ import (
 	"fintech-wallet/backend/internal/model"
 	"fintech-wallet/backend/internal/repository"
 
-	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
 )
 
@@ -22,6 +21,7 @@ type LoginResult struct {
 
 type AuthService struct {
 	userRepository         *repository.UserRepository
+	walletRepository       *repository.WalletRepository
 	refreshTokenRepository *repository.RefreshTokenRepository
 	jwtManager             *auth.JWTManager
 	db                     *gorm.DB
@@ -34,12 +34,14 @@ type RefreshResult struct {
 
 func NewAuthService(
 	userRepository *repository.UserRepository,
+	walletRepository *repository.WalletRepository,
 	refreshTokenRepository *repository.RefreshTokenRepository,
 	jwtManager *auth.JWTManager,
 	db *gorm.DB,
 ) *AuthService {
 	return &AuthService{
 		userRepository:         userRepository,
+		walletRepository:       walletRepository,
 		refreshTokenRepository: refreshTokenRepository,
 		jwtManager:             jwtManager,
 		db:                     db,
@@ -52,39 +54,63 @@ func (s *AuthService) Register(
 	password string,
 ) (*model.User, error) {
 
-	existingUser, err := s.userRepository.FindByEmail(email)
+	var createdUser *model.User
 
-	if err == nil && existingUser != nil {
-		return nil, ErrEmailAlreadyExists
-	}
+	err := s.db.Transaction(func(tx *gorm.DB) error {
 
-	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
-		return nil, err
-	}
+		userRepository := s.userRepository.WithTx(tx)
+		walletRepository := s.walletRepository.WithTx(tx)
 
-	hashedPassword, err := bcrypt.GenerateFromPassword(
-		[]byte(password),
-		bcrypt.DefaultCost,
-	)
+		// Cek email
+		existingUser, err := userRepository.FindByEmail(email)
+
+		if err == nil && existingUser != nil {
+			return ErrEmailAlreadyExists
+		}
+
+		if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
+			return err
+		}
+
+		// Hash password
+		hashedPassword, err := auth.HashPassword(password)
+
+		if err != nil {
+			return err
+		}
+
+		// Create User
+		user := &model.User{
+			Name:     name,
+			Email:    email,
+			Password: hashedPassword,
+			Role:     "USER",
+		}
+
+		if err := userRepository.Create(user); err != nil {
+			return err
+		}
+
+		// Create Wallet
+		wallet := &model.Wallet{
+			UserID:  user.ID,
+			Balance: 0,
+		}
+
+		if err := walletRepository.Create(wallet); err != nil {
+			return err
+		}
+
+		createdUser = user
+
+		return nil
+	})
 
 	if err != nil {
 		return nil, err
 	}
 
-	user := &model.User{
-		Name:     name,
-		Email:    email,
-		Password: string(hashedPassword),
-		Role:     "USER",
-	}
-
-	err = s.userRepository.Create(user)
-
-	if err != nil {
-		return nil, err
-	}
-
-	return user, nil
+	return createdUser, nil
 }
 
 func (s *AuthService) Login(
@@ -102,10 +128,7 @@ func (s *AuthService) Login(
 		return nil, err
 	}
 
-	err = bcrypt.CompareHashAndPassword(
-		[]byte(user.Password),
-		[]byte(password),
-	)
+	err = auth.CheckPassword(password, user.Password)
 
 	if err != nil {
 		return nil, ErrInvalidCredentials
