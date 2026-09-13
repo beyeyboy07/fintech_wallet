@@ -14,5 +14,7 @@ func Migrate(db *gorm.DB) error {
 		&model.Transaction{},
 		&model.TransactionEntry{},
 		&model.IdempotencyKey{},
+		&model.OutboxEvent{},
+		&model.WebhookEvent{},
 	)
 }

@@ -36,6 +36,7 @@ func TestTransferConcurrent(t *testing.T) {
 		transactionRepository,
 		transactionEntryRepository,
 		idempotencyRepository,
+		nil,
 		db,
 	)
 

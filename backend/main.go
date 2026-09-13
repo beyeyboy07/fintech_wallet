@@ -2,12 +2,13 @@ package main
 
 import (
 	"log"
-	"time"
 
 	"fintech-wallet/backend/internal/config"
 	"fintech-wallet/backend/internal/database"
 	"fintech-wallet/backend/internal/redis"
 	"fintech-wallet/backend/internal/router"
+	"fintech-wallet/backend/internal/service"
+	"fintech-wallet/backend/internal/worker"
 )
 
 func main() {
@@ -20,31 +21,37 @@ func main() {
 		log.Fatal("Redis connection failed:", err)
 	}
 
+	queueClient := worker.NewClient(
+		cfg.RedisHost + ":" + cfg.RedisPort,
+	)
+
+	defer queueClient.Close()
+
 	log.Println("Redis connected successfully")
 
 	// Test Redis SET
-	err := redis.Set(
-		redisClient,
-		"test:key",
-		"hello redis",
-		5*time.Minute,
-	)
+	// err := redis.Set(
+	// 	redisClient,
+	// 	"test:key",
+	// 	"hello redis",
+	// 	5*time.Minute,
+	// )
 
-	if err != nil {
-		log.Fatal("Redis SET failed:", err)
-	}
+	// if err != nil {
+	// 	log.Fatal("Redis SET failed:", err)
+	// }
 
-	// Test Redis GET
-	value, err := redis.Get(
-		redisClient,
-		"test:key",
-	)
+	// // Test Redis GET
+	// value, err := redis.Get(
+	// 	redisClient,
+	// 	"test:key",
+	// )
 
-	if err != nil {
-		log.Fatal("Redis GET failed:", err)
-	}
+	// if err != nil {
+	// 	log.Fatal("Redis GET failed:", err)
+	// }
 
-	log.Println("Redis value:", value)
+	// log.Println("Redis value:", value)
 
 	// Connect to database
 	db, err := database.Connect(cfg)
@@ -65,7 +72,14 @@ func main() {
 	log.Println("Database migration completed")
 
 	// Setup router
-	r := router.SetupRouter(db, cfg)
+	redisService := service.NewRedisService(redisClient)
+
+	r := router.SetupRouter(
+		db,
+		cfg,
+		redisService,
+		queueClient,
+	)
 
 	// Start server
 	log.Println("Server running on port :" + cfg.AppPort)

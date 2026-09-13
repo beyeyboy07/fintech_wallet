@@ -16,6 +16,19 @@ type FailingTransactionRepository struct {
 	err error
 }
 
+func (r *FailingTransactionRepository) UpdateStatus(
+	id uint,
+	status string,
+) error {
+	return r.err
+}
+
+func (r *FailingTransactionRepository) FindByIDForUpdate(
+	id uint,
+) (*model.Transaction, error) {
+	return nil, r.err
+}
+
 func (r *FailingTransactionRepository) Create(
 	transaction *model.Transaction,
 ) error {
@@ -46,6 +59,7 @@ func TestTransferRollback(t *testing.T) {
 	}
 
 	walletRepository := repository.NewWalletRepository(db)
+	// transactionRepository := repository.NewTransactionRepository(db)
 
 	failingRepository := &FailingTransactionRepository{
 		err: errors.New("failed to create transaction"),
@@ -59,6 +73,7 @@ func TestTransferRollback(t *testing.T) {
 		failingRepository,
 		transactionEntryRepository,
 		idempotencyRepository,
+		nil,
 		db,
 	)
 

@@ -127,7 +127,7 @@ func (h *WalletHandler) TopUp(c *gin.Context) {
 		return
 	}
 
-	transaction, err := h.walletService.TopUp(
+	transaction, err := h.walletService.TopUpAsync(
 		userID,
 		request.Amount,
 	)
@@ -165,8 +165,8 @@ func (h *WalletHandler) TopUp(c *gin.Context) {
 
 	response.Success(
 		c,
-		http.StatusCreated,
-		"Top up successful",
+		http.StatusAccepted,
+		"Top up request accepted",
 		transaction,
 	)
 }

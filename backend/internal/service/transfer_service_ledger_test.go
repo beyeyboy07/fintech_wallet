@@ -36,6 +36,7 @@ func TestTransferCreatesLedgerEntries(t *testing.T) {
 		transactionRepository,
 		transactionEntryRepository,
 		idempotencyRepository,
+		nil,
 		db,
 	)
 

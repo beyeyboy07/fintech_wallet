@@ -24,6 +24,7 @@ type TransferService struct {
 	transactionRepository      repository.TransactionRepositoryInterface
 	transactionEntryRepository *repository.TransactionEntryRepository
 	idempotencyRepository      *repository.IdempotencyRepository
+	redisService               *RedisService
 	db                         *gorm.DB
 }
 
@@ -32,6 +33,7 @@ func NewTransferService(
 	transactionRepository repository.TransactionRepositoryInterface,
 	transactionEntryRepository *repository.TransactionEntryRepository,
 	idempotencyRepository *repository.IdempotencyRepository,
+	redisService *RedisService,
 	db *gorm.DB,
 ) *TransferService {
 	return &TransferService{
@@ -39,6 +41,7 @@ func NewTransferService(
 		transactionRepository:      transactionRepository,
 		transactionEntryRepository: transactionEntryRepository,
 		idempotencyRepository:      idempotencyRepository,
+		redisService:               redisService,
 		db:                         db,
 	}
 }
@@ -76,6 +79,11 @@ func (s *TransferService) Transfer(
 
 	if err != nil {
 		return nil, err
+	}
+
+	if s.redisService != nil {
+		_ = s.redisService.Delete(walletCacheKey(senderID))
+		_ = s.redisService.Delete(walletCacheKey(receiverID))
 	}
 
 	return transaction, nil
@@ -217,7 +225,7 @@ func (s *TransferService) TransferWithIdempotency(
 	)
 
 	var transaction *model.Transaction
-
+	isNewTransfer := false
 	err := s.db.Transaction(func(tx *gorm.DB) error {
 
 		idempotencyRepository := s.idempotencyRepository.WithTx(tx)
@@ -309,6 +317,8 @@ func (s *TransferService) TransferWithIdempotency(
 			return err
 		}
 
+		isNewTransfer = true
+
 		// Simpan transaction ID ke idempotency record
 		newKey.TransactionID = &transaction.ID
 
@@ -317,6 +327,11 @@ func (s *TransferService) TransferWithIdempotency(
 
 	if err != nil {
 		return nil, err
+	}
+
+	if isNewTransfer && s.redisService != nil {
+		_ = s.redisService.Delete(walletCacheKey(senderID))
+		_ = s.redisService.Delete(walletCacheKey(receiverID))
 	}
 
 	return transaction, nil

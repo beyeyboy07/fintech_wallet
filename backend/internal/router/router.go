@@ -9,12 +9,15 @@ import (
 	"fintech-wallet/backend/internal/service"
 
 	"github.com/gin-gonic/gin"
+	"github.com/hibiken/asynq"
 	"gorm.io/gorm"
 )
 
 func SetupRouter(
 	db *gorm.DB,
 	cfg config.Config,
+	redisService *service.RedisService,
+	queueClient *asynq.Client,
 ) *gin.Engine {
 
 	router := gin.Default()
@@ -27,10 +30,12 @@ func SetupRouter(
 	refreshTokenRepository := repository.NewRefreshTokenRepository(db)
 	walletRepository := repository.NewWalletRepository(db)
 	idempotencyRepository := repository.NewIdempotencyRepository(db)
+	outboxRepository := repository.NewOutboxRepository(db)
 	// Service
 	userService := service.NewUserService(
 		userRepository,
 	)
+	queueService := service.NewQueueService(queueClient)
 
 	transactionRepository := repository.NewTransactionRepository(db)
 
@@ -43,14 +48,17 @@ func SetupRouter(
 	transactionHandler := handler.NewTransactionHandler(
 		transactionService,
 	)
+	webhookHandler := handler.NewWebhookHandler()
 
 	transferService := service.NewTransferService(
 		walletRepository,
 		transactionRepository,
 		transactionEntryRepository,
 		idempotencyRepository,
+		redisService,
 		db,
 	)
+
 	transferHandler := handler.NewTransferHandler(
 		transferService,
 	)
@@ -58,6 +66,9 @@ func SetupRouter(
 	walletService := service.NewWalletService(
 		walletRepository,
 		transactionRepository,
+		outboxRepository,
+		redisService,
+		queueService,
 		db,
 	)
 
@@ -122,5 +133,9 @@ func SetupRouter(
 		transactionHandler.GetTransactions,
 	)
 
+	router.POST(
+		"/api/v1/webhooks/payment",
+		webhookHandler.Payment,
+	)
 	return router
 }

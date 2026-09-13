@@ -4,17 +4,16 @@ import (
 	"fintech-wallet/backend/internal/model"
 
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 )
 
 type TransactionRepositoryInterface interface {
 	Create(transaction *model.Transaction) error
 	FindByID(id uint) (*model.Transaction, error)
-	FindByUserID(
-		userID uint,
-		limit int,
-		offset int,
-	) ([]model.Transaction, error)
+	FindByUserID(userID uint, limit int, offset int) ([]model.Transaction, error)
+	FindByIDForUpdate(id uint) (*model.Transaction, error)
 	CountByUserID(userID uint) (int64, error)
+	UpdateStatus(id uint, status string) error
 	WithTx(tx *gorm.DB) TransactionRepositoryInterface
 }
 
@@ -99,4 +98,33 @@ func (r *TransactionRepository) CountByUserID(
 	}
 
 	return total, nil
+}
+
+func (r *TransactionRepository) UpdateStatus(
+	id uint,
+	status string,
+) error {
+	return r.db.
+		Model(&model.Transaction{}).
+		Where("id = ?", id).
+		Update("status", status).
+		Error
+}
+
+func (r *TransactionRepository) FindByIDForUpdate(
+	id uint,
+) (*model.Transaction, error) {
+
+	var transaction model.Transaction
+
+	err := r.db.
+		Clauses(clause.Locking{Strength: "UPDATE"}).
+		First(&transaction, id).
+		Error
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &transaction, nil
 }
