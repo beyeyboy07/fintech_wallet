@@ -1,0 +1,126 @@
+services:
+  mysql:
+    image: mysql:8.4
+    container_name: fintech-wallet-mysql
+    environment:
+       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+       MYSQL_DATABASE: ${MYSQL_DATABASE}
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-proot"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    container_name: fintech-wallet-redis
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: fintech-wallet-backend
+    restart: unless-stopped
+    ports:
+      - "8081:8081"
+    environment:
+      APP_PORT: 8081
+      APP_ENV: development
+
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_USER: root
+      DB_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      DB_NAME: ${MYSQL_DATABASE}
+
+      JWT_SECRET: fintech-wallet-secret-development
+
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_PASSWORD: ""
+      REDIS_DB: 0
+
+      WEBHOOK_SECRET: webhook-secret-development
+
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+
+  worker:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: fintech-wallet-worker
+    restart: unless-stopped
+    command: ["./worker"]
+    environment:
+      APP_ENV: development
+
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_USER: root
+      DB_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      DB_NAME: ${MYSQL_DATABASE}
+
+      JWT_SECRET: ${JWT_SECRET}
+
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_PASSWORD: ""
+      REDIS_DB: 0
+
+      WEBHOOK_SECRET: ${WEBHOOK_SECRET}
+
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  outbox:
+      build:
+        context: ./backend
+        dockerfile: Dockerfile
+      container_name: fintech-wallet-outbox
+      restart: unless-stopped
+      command: ["./outbox"]
+      environment:
+        APP_ENV: development
+
+        DB_HOST: mysql
+        DB_PORT: 3306
+        DB_USER: root
+        DB_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+        DB_NAME: ${MYSQL_DATABASE}
+
+        JWT_SECRET: ${JWT_SECRET}
+
+        REDIS_HOST: redis
+        REDIS_PORT: 6379
+        REDIS_PASSWORD: ""
+        REDIS_DB: 0
+
+        WEBHOOK_SECRET: ${WEBHOOK_SECRET}
+
+      depends_on:
+        mysql:
+          condition: service_healthy
+        redis:
+          condition: service_healthy
+
+volumes:
+  mysql_data:

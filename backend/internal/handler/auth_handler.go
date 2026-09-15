@@ -3,6 +3,7 @@ package handler
 import (
 	"errors"
 	"net/http"
+	"strings"
 
 	"fintech-wallet/backend/internal/response"
 	"fintech-wallet/backend/internal/service"
@@ -15,6 +16,10 @@ type AuthHandler struct {
 	authService *service.AuthService
 }
 
+type RefreshTokenRequest struct {
+	Token string `json:"refresh_token" binding:"required"`
+}
+
 func NewAuthHandler(authService *service.AuthService) *AuthHandler {
 	return &AuthHandler{
 		authService: authService,
@@ -24,7 +29,7 @@ func NewAuthHandler(authService *service.AuthService) *AuthHandler {
 type RegisterRequest struct {
 	Name     string `json:"name" binding:"required,min=3,max=100"`
 	Email    string `json:"email" binding:"required,email,max=150"`
-	Password string `json:"password" binding:"required,min=8,max=72"`
+	Password string `json:"password" binding:"required,min=8"`
 }
 
 type LoginRequest struct {
@@ -36,6 +41,18 @@ type RefreshRequest struct {
 	RefreshToken string `json:"refresh_token" binding:"required"`
 }
 
+// Register godoc
+// @Summary Register new user
+// @Description Create a new user account and wallet
+// @Tags Auth
+// @Accept json
+// @Produce json
+// @Param request body RegisterRequest true "Register request"
+// @Success 201 {object} response.SuccessResponse
+// @Failure 400 {object} response.ErrorResponse
+// @Failure 409 {object} response.ErrorResponse
+// @Failure 500 {object} response.ErrorResponse
+// @Router /api/v1/auth/register [post]
 func (handler *AuthHandler) Register(data *gin.Context) {
 	var request RegisterRequest
 
@@ -48,6 +65,8 @@ func (handler *AuthHandler) Register(data *gin.Context) {
 		)
 		return
 	}
+
+	request.Email = strings.ToLower(strings.TrimSpace(request.Email))
 
 	user, err := handler.authService.Register(
 		request.Name,
@@ -83,6 +102,18 @@ func (handler *AuthHandler) Register(data *gin.Context) {
 	)
 }
 
+// Login godoc
+// @Summary Login user
+// @Description Authenticate user and return access token and refresh token
+// @Tags Auth
+// @Accept json
+// @Produce json
+// @Param request body LoginRequest true "Login request"
+// @Success 200 {object} response.SuccessResponse
+// @Failure 400 {object} response.ErrorResponse
+// @Failure 401 {object} response.ErrorResponse
+// @Failure 500 {object} response.ErrorResponse
+// @Router /api/v1/auth/login [post]
 func (handler *AuthHandler) Login(data *gin.Context) {
 	var request LoginRequest
 
@@ -132,6 +163,17 @@ func (handler *AuthHandler) Login(data *gin.Context) {
 	)
 }
 
+// Me godoc
+// @Summary Get current user
+// @Description Get information about the currently authenticated user
+// @Tags Auth
+// @Produce json
+// @Security BearerAuth
+// @Success 200 {object} response.SuccessResponse
+// @Failure 401 {object} response.ErrorResponse
+// @Failure 404 {object} response.ErrorResponse
+// @Failure 500 {object} response.ErrorResponse
+// @Router /api/v1/auth/me [get]
 func (h *AuthHandler) Me(c *gin.Context) {
 	userIDValue, exists := c.Get("user_id")
 
@@ -187,6 +229,18 @@ func (h *AuthHandler) Me(c *gin.Context) {
 	)
 }
 
+// Refresh godoc
+// @Summary Refresh access token
+// @Description Generate a new access token using a refresh token
+// @Tags Auth
+// @Accept json
+// @Produce json
+// @Param request body RefreshTokenRequest true "Refresh token request"
+// @Success 200 {object} response.SuccessResponse
+// @Failure 400 {object} response.ErrorResponse
+// @Failure 401 {object} response.ErrorResponse
+// @Failure 500 {object} response.ErrorResponse
+// @Router /api/v1/auth/refresh [post]
 func (h *AuthHandler) Refresh(c *gin.Context) {
 	var request RefreshRequest
 
@@ -235,6 +289,18 @@ func (h *AuthHandler) Refresh(c *gin.Context) {
 	)
 }
 
+// Logout godoc
+// @Summary Logout user
+// @Description Revoke the current refresh token
+// @Tags Auth
+// @Accept json
+// @Produce json
+// @Param request body RefreshTokenRequest true "Refresh token request"
+// @Success 200 {object} response.SuccessResponse
+// @Failure 400 {object} response.ErrorResponse
+// @Failure 401 {object} response.ErrorResponse
+// @Failure 500 {object} response.ErrorResponse
+// @Router /api/v1/auth/logout [post]
 func (h *AuthHandler) Logout(c *gin.Context) {
 	var request RefreshRequest
 

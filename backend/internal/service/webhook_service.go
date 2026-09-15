@@ -16,6 +16,7 @@ var (
 	ErrInvalidTransactionType = errors.New("invalid transaction type")
 	ErrInvalidWebhookAmount   = errors.New("invalid webhook amount")
 	ErrTransactionProcessed   = errors.New("transaction already processed")
+	ErrInvalidWebhookStatus   = errors.New("invalid webhook status")
 )
 
 type WebhookService struct {
@@ -42,6 +43,10 @@ func NewWebhookService(
 func (s *WebhookService) Receive(
 	request model.PaymentWebhookRequest,
 ) error {
+
+	if request.Status != "SUCCESS" {
+		return ErrInvalidWebhookStatus
+	}
 
 	return s.db.Transaction(func(tx *gorm.DB) error {
 

@@ -2,6 +2,7 @@ package handler
 
 import (
 	"errors"
+	"mime"
 	"net/http"
 
 	"fintech-wallet/backend/internal/response"
@@ -25,10 +26,26 @@ func NewTransferHandler(
 
 type TransferRequest struct {
 	ReceiverID  uint   `json:"receiver_id" binding:"required"`
-	Amount      int64  `json:"amount" binding:"required"`
-	Description string `json:"description"`
+	Amount      int64  `json:"amount" binding:"required,gt=0"`
+	Description string `json:"description" binding:"max=255"`
 }
 
+// Transfer godoc
+// @Summary Transfer wallet
+// @Description Transfer balance from the authenticated user's wallet to another user
+// @Tags Transfer
+// @Accept json
+// @Produce json
+// @Security BearerAuth
+// @Param Idempotency-Key header string true "Unique idempotency key"
+// @Param request body TransferRequest true "Transfer request"
+// @Success 201 {object} response.SuccessResponse
+// @Failure 400 {object} response.ErrorResponse
+// @Failure 401 {object} response.ErrorResponse
+// @Failure 404 {object} response.ErrorResponse
+// @Failure 409 {object} response.ErrorResponse
+// @Failure 500 {object} response.ErrorResponse
+// @Router /api/v1/transfers [post]
 func (h *TransferHandler) Transfer(c *gin.Context) {
 
 	userIDValue, exists := c.Get("user_id")
@@ -55,6 +72,19 @@ func (h *TransferHandler) Transfer(c *gin.Context) {
 		return
 	}
 
+	contentType := c.GetHeader("Content-Type")
+
+	mediaType, _, err := mime.ParseMediaType(contentType)
+	if err != nil || mediaType != "application/json" {
+		response.Error(
+			c,
+			http.StatusUnsupportedMediaType,
+			"Content-Type must be application/json",
+			"UNSUPPORTED_MEDIA_TYPE",
+		)
+		return
+	}
+
 	var request TransferRequest
 
 	if err := c.ShouldBindJSON(&request); err != nil {
@@ -68,6 +98,16 @@ func (h *TransferHandler) Transfer(c *gin.Context) {
 	}
 
 	idempotencyKey := c.GetHeader("Idempotency-Key")
+
+	if len(idempotencyKey) > 100 {
+		response.Error(
+			c,
+			http.StatusBadRequest,
+			"Invalid Idempotency-Key",
+			"INVALID_IDEMPOTENCY_KEY",
+		)
+		return
+	}
 
 	transaction, err := h.transferService.TransferWithIdempotency(
 		senderID,

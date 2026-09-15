@@ -29,6 +29,17 @@ func NewWalletHandler(
 	}
 }
 
+// GetWallet godoc
+// @Summary Get wallet
+// @Description Get wallet information for the currently authenticated user
+// @Tags Wallet
+// @Produce json
+// @Security BearerAuth
+// @Success 200 {object} response.SuccessResponse
+// @Failure 401 {object} response.ErrorResponse
+// @Failure 404 {object} response.ErrorResponse
+// @Failure 500 {object} response.ErrorResponse
+// @Router /api/v1/wallet [get]
 func (h *WalletHandler) GetWallet(c *gin.Context) {
 
 	userIDValue, exists := c.Get("user_id")
@@ -89,6 +100,20 @@ type TopUpRequest struct {
 	Amount int64 `json:"amount" binding:"required"`
 }
 
+// TopUp godoc
+// @Summary Top up wallet
+// @Description Add balance to the authenticated user's wallet
+// @Tags Wallet
+// @Accept json
+// @Produce json
+// @Security BearerAuth
+// @Param request body TopUpRequest true "Top up request"
+// @Success 201 {object} response.SuccessResponse
+// @Failure 400 {object} response.ErrorResponse
+// @Failure 401 {object} response.ErrorResponse
+// @Failure 404 {object} response.ErrorResponse
+// @Failure 500 {object} response.ErrorResponse
+// @Router /api/v1/wallet/topup [post]
 func (h *WalletHandler) TopUp(c *gin.Context) {
 
 	userIDValue, exists := c.Get("user_id")

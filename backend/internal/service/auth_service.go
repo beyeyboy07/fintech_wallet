@@ -84,7 +84,7 @@ func (s *AuthService) Register(
 			Name:     name,
 			Email:    email,
 			Password: hashedPassword,
-			Role:     "USER",
+			Role:     model.RoleUser,
 		}
 
 		if err := userRepository.Create(user); err != nil {

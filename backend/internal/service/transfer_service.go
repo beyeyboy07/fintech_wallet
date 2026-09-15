@@ -53,7 +53,7 @@ func (s *TransferService) Transfer(
 	description string,
 ) (*model.Transaction, error) {
 
-	if amount <= 0 {
+	if amount <= 0 || amount > model.MaxTransferAmount {
 		return nil, ErrInvalidTransferAmount
 	}
 
@@ -205,6 +205,10 @@ func (s *TransferService) TransferWithIdempotency(
 	description string,
 	idempotencyKey string,
 ) (*model.Transaction, error) {
+
+	if amount <= 0 || amount > model.MaxTransferAmount {
+		return nil, ErrInvalidTransferAmount
+	}
 
 	if idempotencyKey == "" {
 		return nil, ErrIdempotencyKeyRequired

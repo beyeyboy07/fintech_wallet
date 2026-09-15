@@ -22,6 +22,7 @@ type Config struct {
 	RedisPort     string
 	RedisPassword string
 	RedisDB       string
+	WebhookSecret string
 }
 
 func Load() Config {
@@ -32,9 +33,9 @@ func Load() Config {
 	}
 
 	cfg := Config{
-		AppPort: getEnv("APP_PORT", "8080"),
-		AppEnv:  getEnv("APP_ENV", "development"),
-
+		AppPort:       getEnv("APP_PORT", "8080"),
+		AppEnv:        getEnv("APP_ENV", "development"),
+		WebhookSecret: os.Getenv("WEBHOOK_SECRET"),
 		DBHost:        getEnv("DB_HOST", "localhost"),
 		DBPort:        getEnv("DB_PORT", "3306"),
 		DBUser:        getEnv("DB_USER", "root"),

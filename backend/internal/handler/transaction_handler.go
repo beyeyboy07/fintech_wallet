@@ -22,6 +22,19 @@ func NewTransactionHandler(
 	}
 }
 
+// GetTransactions godoc
+// @Summary Get transaction history
+// @Description Get paginated transaction history for the authenticated user
+// @Tags Transaction
+// @Produce json
+// @Security BearerAuth
+// @Param page query int false "Page number" default(1)
+// @Param limit query int false "Items per page" default(10) maximum(100)
+// @Success 200 {object} response.SuccessResponse
+// @Failure 400 {object} response.ErrorResponse
+// @Failure 401 {object} response.ErrorResponse
+// @Failure 500 {object} response.ErrorResponse
+// @Router /api/v1/transactions [get]
 func (h *TransactionHandler) GetTransactions(c *gin.Context) {
 	userID := c.GetUint("user_id")
 

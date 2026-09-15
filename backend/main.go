@@ -1,16 +1,24 @@
 package main
 
 import (
-	"log"
-
+	_ "fintech-wallet/backend/docs"
 	"fintech-wallet/backend/internal/config"
 	"fintech-wallet/backend/internal/database"
 	"fintech-wallet/backend/internal/redis"
 	"fintech-wallet/backend/internal/router"
 	"fintech-wallet/backend/internal/service"
 	"fintech-wallet/backend/internal/worker"
+	"log"
 )
 
+// @title Fintech Wallet API
+// @version 1.0
+// @description REST API for Fintech Wallet learning project.
+// @host localhost:8081
+// @BasePath /
+// @securityDefinitions.apikey BearerAuth
+// @in header
+// @name Authorization
 func main() {
 	cfg := config.Load()
 

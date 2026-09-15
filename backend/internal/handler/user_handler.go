@@ -19,6 +19,17 @@ func NewUserHandler(userService *service.UserService) *UserHandler {
 	}
 }
 
+// GetUsers godoc
+// @Summary Get users
+// @Description Get list of users for admin
+// @Tags Admin
+// @Produce json
+// @Security BearerAuth
+// @Success 200 {object} response.SuccessResponse
+// @Failure 401 {object} response.ErrorResponse
+// @Failure 403 {object} response.ErrorResponse
+// @Failure 500 {object} response.ErrorResponse
+// @Router /api/v1/users [get]
 func (h *UserHandler) GetUsers(c *gin.Context) {
 	users, err := h.userService.GetUsers()
 
