@@ -1,4 +1,7 @@
 import type { ButtonHTMLAttributes } from 'react'
+import '../assets/css/Button.css'
+
+
 
 type ButtonVariant = 'primary' | 'secondary' | 'danger'
 
@@ -18,12 +21,12 @@ function Button({
 }: ButtonProps) {
   return (
     <button
-        className={`button button-${variant} ${className}`.trim()}
-        disabled={disabled || loading}
-        aria-busy={loading}
-        {...props}
-        >
-        {children}
+      className={`button button-${variant} ${className}`.trim()}
+      disabled={disabled || loading}
+      aria-busy={loading}
+      {...props}
+    >
+      {children}
     </button>
   )
 }

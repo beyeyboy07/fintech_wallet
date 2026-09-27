@@ -13,7 +13,6 @@ export interface TopUpRequest {
   description?: string
 }
 
-
 export type TopUpResponse = ApiResponse<Transaction>
 
 export async function getWallet(): Promise<Wallet> {

@@ -1,0 +1,35 @@
+.login-page h2 {
+  margin: 0;
+  font-size: 28px;
+}
+
+.login-page .auth-description {
+  margin: 8px 0 24px;
+  color: #666;
+}
+
+.login-page .auth-link {
+  margin-top: 24px;
+  color: #666;
+}
+
+.login-page .auth-link a {
+  color: inherit;
+  font-weight: 600;
+}
+
+.login-page .auth-link a:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+@media (max-width: 600px) {
+  .login-page h2 {
+    font-size: 24px;
+  }
+
+  .login-page .auth-description,
+  .login-page .auth-link {
+    line-height: 1.5;
+  }
+}

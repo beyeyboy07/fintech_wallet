@@ -1,0 +1,48 @@
+.transaction-card {
+  padding: 16px;
+  margin-bottom: 12px;
+}
+
+.transaction-card p {
+  margin: 8px 0;
+}
+
+.transaction-card-divider {
+  margin-top: 16px;
+  border: 0;
+  border-top: 1px solid #eee;
+}
+
+.transaction-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.transaction-amount {
+  margin: 0 0 16px;
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.transaction-details p {
+  margin: 6px 0;
+  color: #555;
+}
+
+@media (max-width: 600px) {
+  .transaction-amount {
+    font-size: 22px;
+  }
+
+  .transaction-details p {
+    overflow-wrap: anywhere;
+  }
+
+  .transaction-card-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}

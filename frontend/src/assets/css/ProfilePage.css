@@ -1,0 +1,44 @@
+.profile-page {
+  width: 100%;
+}
+
+.profile-page .profile-card {
+  width: 100%;
+  max-width: 500px;
+}
+
+.profile-page .profile-card p {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin: 0;
+  padding: 14px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.profile-page .profile-card p:first-child {
+  padding-top: 0;
+}
+
+.profile-page .profile-card p:last-child {
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+
+.profile-page .profile-card strong {
+  min-width: 60px;
+}
+
+/* Mobile */
+
+@media (max-width: 600px) {
+  .profile-page .profile-card {
+    padding: 16px;
+  }
+
+  .profile-page .profile-card p {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+  }
+}

@@ -1,11 +1,11 @@
 import { useState, type ReactNode } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { NavLink, useNavigate } from 'react-router-dom'
 import { logout } from '../services/authService'
 import { clearTokens } from '../utils/tokenStorage'
 import { useAuthStore } from '../stores/authStore'
 import PageContainer from '../components/PageContainer'
 import Button from '../components/Button'
-
+import '../assets/css/AppLayout.css'
 
 
 
@@ -36,16 +36,46 @@ function AppLayout({ children }: AppLayoutProps) {
   }
 
   return (
-    <div>
+    <div className="app-layout">
       <header className="app-header">
         <h1 className="app-logo">Fintech Wallet</h1>
 
         <nav className="app-nav">
-          <Link to="/">Dashboard</Link>
-          <Link to="/profile">Profile</Link>
-          <Link to="/top-up">Top Up</Link>
-          <Link to="/transfer">Transfer</Link>
-          <Link to="/transactions">Transactions</Link>
+          <NavLink
+            to="/"
+            end
+            className={({ isActive }) => (isActive ? 'active' : '')}
+          >
+            Dashboard
+          </NavLink>
+
+          <NavLink
+            to="/profile"
+            className={({ isActive }) => (isActive ? 'active' : '')}
+          >
+            Profile
+          </NavLink>
+
+          <NavLink
+            to="/top-up"
+            className={({ isActive }) => (isActive ? 'active' : '')}
+          >
+            Top Up
+          </NavLink>
+
+          <NavLink
+            to="/transfer"
+            className={({ isActive }) => (isActive ? 'active' : '')}
+          >
+            Transfer
+          </NavLink>
+
+          <NavLink
+            to="/transactions"
+            className={({ isActive }) => (isActive ? 'active' : '')}
+          >
+            Transactions
+          </NavLink>
 
           <Button
             type="button"

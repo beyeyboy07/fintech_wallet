@@ -48,7 +48,6 @@ const router = createBrowserRouter([
       </ProtectedRoute>
     ),
   },
-
   {
     path: '/transfer',
     element: (
@@ -59,9 +58,8 @@ const router = createBrowserRouter([
       </ProtectedRoute>
     ),
   },
-
   {
-  path: '/transactions',
+    path: '/transactions',
     element: (
       <ProtectedRoute>
         <AppLayout>

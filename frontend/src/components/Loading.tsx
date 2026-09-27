@@ -1,3 +1,5 @@
+import '../assets/css/Loading.css'
+
 interface LoadingProps {
   message?: string
 }

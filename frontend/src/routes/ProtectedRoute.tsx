@@ -3,8 +3,6 @@ import { Navigate } from 'react-router-dom'
 import { useAuthStore } from '../stores/authStore'
 import Loading from '../components/Loading'
 
-
-
 interface ProtectedRouteProps {
   children: ReactNode
 }

@@ -1,0 +1,20 @@
+.transfer-page {
+  width: 100%;
+}
+
+.transfer-page .card {
+  width: 100%;
+  max-width: 600px;
+}
+
+.transfer-page .form-actions {
+  margin-top: 16px;
+}
+
+/* Mobile */
+
+@media (max-width: 600px) {
+  .transfer-page .card {
+    width: 100%;
+  }
+}

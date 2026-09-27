@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react'
+import '../assets/css/PageContainer.css'
 
 interface PageContainerProps {
   children: ReactNode

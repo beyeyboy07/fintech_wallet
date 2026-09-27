@@ -1,0 +1,166 @@
+.dashboard-page {
+  width: 100%;
+}
+
+/* Balance */
+
+.dashboard-page .balance-card {
+  width: 100%;
+  max-width: 600px;
+  margin-bottom: 28px;
+  padding: 30px;
+}
+
+.dashboard-page .balance-label {
+  margin: 0 0 6px;
+  color: #666;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.dashboard-page .balance-amount {
+  margin: 0;
+  font-size: 36px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  overflow-wrap: anywhere;
+}
+
+/* Quick actions */
+
+.dashboard-page .quick-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  width: 100%;
+  max-width: 600px;
+}
+
+.dashboard-page .quick-actions a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 130px;
+  min-height: 44px;
+  padding: 12px 18px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background: #fff;
+  color: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  text-align: center;
+  text-decoration: none;
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease,
+    outline-offset 0.15s ease;
+}
+
+.dashboard-page .quick-actions a:hover {
+  background: #f3f3f3;
+  border-color: #c8c8c8;
+}
+
+.dashboard-page .quick-actions a:active {
+  background: #e9e9e9;
+  border-color: #bbb;
+}
+
+.dashboard-page .quick-actions a:focus-visible {
+  outline: 2px solid #111;
+  outline-offset: 2px;
+}
+
+/* Recent transactions */
+
+.dashboard-page .dashboard-transactions {
+  width: 100%;
+  max-width: 800px;
+  margin-top: 40px;
+  padding-top: 24px;
+  padding-bottom: 8px;
+  border-top: 1px solid #e5e5e5;
+}
+
+.dashboard-page .dashboard-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.dashboard-page .dashboard-section-header h3 {
+  margin: 0;
+  font-size: 20px;
+}
+
+.dashboard-page .dashboard-section-header p {
+  margin: 4px 0 0;
+  max-width: 500px;
+  color: #666;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.dashboard-page .dashboard-section-header a {
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.dashboard-page .dashboard-section-header a:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* Mobile */
+
+@media (max-width: 600px) {
+  .dashboard-page .balance-card {
+    padding: 18px;
+  }
+
+  .dashboard-page .balance-amount {
+    font-size: 26px;
+    line-height: 1.3;
+  }
+
+  .dashboard-page .balance-label {
+    font-size: 12px;
+  }
+
+  .dashboard-page .quick-actions {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .dashboard-page .quick-actions a {
+    width: 100%;
+    min-width: 0;
+    padding: 11px 16px;
+  }
+
+  .dashboard-page .dashboard-transactions {
+    margin-top: 32px;
+    padding-top: 20px;
+    max-width: none;
+  }
+
+  .dashboard-page .dashboard-section-header {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+
+  .dashboard-page .dashboard-section-header h3 {
+    font-size: 18px;
+  }
+
+  .dashboard-page .dashboard-section-header a {
+    align-self: flex-start;
+  }
+}

@@ -12,6 +12,7 @@ import PageHeader from '../components/PageHeader'
 import Card from '../components/Card'
 import TransactionCard from '../components/TransactionCard'
 import EmptyState from '../components/EmptyState'
+import '../assets/css/DashboardPage.css'
 
 function DashboardPage() {
   const [wallet, setWallet] = useState<Wallet | null>(null)
@@ -24,10 +25,11 @@ function DashboardPage() {
   useEffect(() => {
     async function loadDashboard() {
       try {
-        const [walletData, transactionData] = await Promise.all([
-          getWallet(),
-          getTransactions(1, 5),
-        ])
+        const [walletData, transactionData] =
+          await Promise.all([
+            getWallet(),
+            getTransactions(1, 5),
+          ])
 
         setWallet(walletData)
         setTransactions(transactionData.items)
@@ -50,7 +52,7 @@ function DashboardPage() {
   }
 
   return (
-    <section>
+    <section className="dashboard-page">
       <PageHeader
         title={`Welcome, ${user?.name ?? ''}`}
         description="Manage your wallet and transactions."

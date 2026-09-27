@@ -71,10 +71,10 @@ api.interceptors.response.use(
 
       return api(originalRequest)
     } catch {
-        clearTokens()
-        useAuthStore.getState().clearAuth()
+      clearTokens()
+      useAuthStore.getState().clearAuth()
 
-        return Promise.reject(error)
+      return Promise.reject(error)
     }
   },
 )

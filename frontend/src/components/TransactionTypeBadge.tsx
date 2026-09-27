@@ -1,4 +1,5 @@
 import type { TransactionType } from '../types/transaction'
+import '../assets/css/TransactionTypeBadge.css'
 
 interface TransactionTypeBadgeProps {
   type: TransactionType
@@ -13,7 +14,7 @@ function TransactionTypeBadge({
   type,
 }: TransactionTypeBadgeProps) {
   return (
-    <span>
+    <span className="transaction-type-badge">
       {typeLabelMap[type]}
     </span>
   )

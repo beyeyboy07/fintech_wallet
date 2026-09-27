@@ -1,0 +1,13 @@
+.auth-container {
+  width: 100%;
+  max-width: 500px;
+  margin: 48px auto;
+  padding: 24px;
+}
+
+@media (max-width: 600px) {
+  .auth-container {
+    margin: 24px auto;
+    padding: 16px;
+  }
+}

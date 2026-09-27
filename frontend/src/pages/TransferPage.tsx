@@ -2,7 +2,6 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { transfer } from '../services/transferService'
 import { getApiErrorMessage } from '../utils/apiError'
-// import Loading from '../components/Loading'
 import ErrorState from '../components/ErrorState'
 import PageHeader from '../components/PageHeader'
 import FormField from '../components/FormField'
@@ -11,7 +10,6 @@ import Button from '../components/Button'
 import Card from '../components/Card'
 import Input from '../components/Input'
 import Textarea from '../components/Textarea'
-
 
 function TransferPage() {
   const navigate = useNavigate()
@@ -23,7 +21,6 @@ function TransferPage() {
   const [loading, setLoading] = useState(false)
   const [receiverIdError, setReceiverIdError] = useState('')
   const [amountError, setAmountError] = useState('')
-
 
   async function handleSubmit(
     event: React.FormEvent<HTMLFormElement>,
@@ -81,10 +78,10 @@ function TransferPage() {
     ) {
       return
     }
+
     setError('')
 
     const trimmedDescription = description.trim()
-    
 
     if (trimmedDescription.length > 255) {
       setError('Description maksimal 255 karakter.')
@@ -92,9 +89,6 @@ function TransferPage() {
     }
 
     setLoading(true)
-
-    // const idempotencyKey = crypto.randomUUID()
-
 
     try {
       await transfer(
@@ -120,14 +114,20 @@ function TransferPage() {
   }
 
   return (
-    <section>
+    <section className="transfer-page">
       <PageHeader
         title="Transfer"
         description="Send balance to another wallet."
       />
+
       <Card>
         <form onSubmit={handleSubmit}>
-         <FormField label="Receiver ID" htmlFor="receiverId"error={receiverIdError} required>
+          <FormField
+            label="Receiver ID"
+            htmlFor="receiverId"
+            error={receiverIdError}
+            required
+          >
             <Input
               id="receiverId"
               type="number"
@@ -141,14 +141,19 @@ function TransferPage() {
               }}
               placeholder="Enter receiver ID"
               autoComplete="off"
-              aria-invalid={Boolean(amountError)}
-              aria-describedby="amount-error"
+              aria-invalid={Boolean(receiverIdError)}
+              aria-describedby="receiverId-error"
               required
             />
           </FormField>
 
-          <FormField label="Amount" htmlFor="amount"error={amountError} required>
-           <Input
+          <FormField
+            label="Amount"
+            htmlFor="amount"
+            error={amountError}
+            required
+          >
+            <Input
               id="amount"
               type="number"
               min="1"
@@ -167,7 +172,10 @@ function TransferPage() {
             />
           </FormField>
 
-          <FormField label="Description" htmlFor="description">
+          <FormField
+            label="Description"
+            htmlFor="description"
+          >
             <Textarea
               id="description"
               value={description}
@@ -184,7 +192,7 @@ function TransferPage() {
 
           {error && <ErrorState message={error} />}
 
-        <FormActions>
+          <FormActions>
             <Button
               type="submit"
               variant="primary"
@@ -192,9 +200,7 @@ function TransferPage() {
             >
               {loading ? 'Processing...' : 'Transfer'}
             </Button>
-        </FormActions>
-
-        {/* {loading && <Loading message="Processing transfer..." />} */}
+          </FormActions>
         </form>
       </Card>
     </section>

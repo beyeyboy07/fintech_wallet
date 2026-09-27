@@ -10,9 +10,7 @@ import AuthContainer from '../components/AuthContainer'
 import FormActions from '../components/FormActions'
 import Button from '../components/Button'
 import Input from '../components/Input'
-
-
-
+import '../assets/css/LoginPage.css'
 
 function LoginPage() {
   const navigate = useNavigate()
@@ -32,12 +30,10 @@ function LoginPage() {
     setEmailError('')
     setPasswordError('')
 
-
     if (loading) {
       return
     }
 
-    
     if (!email.trim()) {
       setEmailError('Email wajib diisi.')
     }
@@ -59,10 +55,10 @@ function LoginPage() {
         password,
       })
 
-    setTokens(
-      tokenResponse.data.access_token,
-      tokenResponse.data.refresh_token,
-    )
+      setTokens(
+        tokenResponse.data.access_token,
+        tokenResponse.data.refresh_token,
+      )
 
       const user = await getMe()
 
@@ -82,13 +78,20 @@ function LoginPage() {
 
   return (
     <AuthContainer>
-      <section>
+      <section className="login-page">
         <h2>Login</h2>
-          <p className="auth-description">
-            Sign in to manage your wallet.
-          </p>
-          <form onSubmit={handleSubmit}>
-          <FormField label="Email" htmlFor="email" error={emailError} required>
+
+        <p className="auth-description">
+          Sign in to manage your wallet.
+        </p>
+
+        <form onSubmit={handleSubmit}>
+          <FormField
+            label="Email"
+            htmlFor="email"
+            error={emailError}
+            required
+          >
             <Input
               id="email"
               type="email"
@@ -106,8 +109,13 @@ function LoginPage() {
             />
           </FormField>
 
-          <FormField label="Password" htmlFor="password" error={passwordError} required>
-           <Input
+          <FormField
+            label="Password"
+            htmlFor="password"
+            error={passwordError}
+            required
+          >
+            <Input
               id="password"
               type="password"
               value={password}
@@ -118,8 +126,8 @@ function LoginPage() {
               maxLength={72}
               placeholder="Enter your password"
               autoComplete="current-password"
-              aria-invalid={Boolean(emailError)}
-              aria-describedby="email-error"
+              aria-invalid={Boolean(passwordError)}
+              aria-describedby="password-error"
               required
             />
           </FormField>
@@ -135,15 +143,14 @@ function LoginPage() {
               {loading ? 'Logging in...' : 'Login'}
             </Button>
           </FormActions>
-
-          {/* {loading && <Loading message="Logging in..." />} */}
         </form>
+
         <p className="auth-link">
-          Don't have an account? <Link to="/register">Register</Link>
+          Don't have an account?{' '}
+          <Link to="/register">Register</Link>
         </p>
       </section>
     </AuthContainer>
-  
   )
 }
 

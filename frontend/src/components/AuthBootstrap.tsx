@@ -9,8 +9,6 @@ import {
 import { useAuthStore } from '../stores/authStore'
 import Loading from './Loading'
 
-
-
 interface AuthBootstrapProps {
   children: ReactNode
 }

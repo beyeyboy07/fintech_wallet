@@ -11,6 +11,7 @@ export interface LoginResponse {
     refresh_token: string
   }
 }
+
 export interface User {
   id: number
   name: string

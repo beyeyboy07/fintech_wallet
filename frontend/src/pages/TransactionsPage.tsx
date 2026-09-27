@@ -65,7 +65,7 @@ function TransactionsPage() {
   }
 
   return (
-    <section>
+    <section className="transactions-page">
       <PageHeader
         title="Transaction History"
         description="View your wallet transaction history."

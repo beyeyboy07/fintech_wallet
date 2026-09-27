@@ -5,7 +5,6 @@ import type { LoginRequest, LoginResponse, User } from '../types/auth'
 import type { RegisterRequest, RegisterResponse } from '../types/register'
 import type { ApiResponse } from '../types/api'
 
-
 export async function login(
   data: LoginRequest,
 ): Promise<LoginResponse> {

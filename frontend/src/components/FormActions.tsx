@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react'
+import '../assets/css/FormActions.css'
 
 interface FormActionsProps {
   children: ReactNode

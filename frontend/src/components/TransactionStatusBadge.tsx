@@ -1,4 +1,5 @@
 import type { TransactionStatus } from '../types/transaction'
+import '../assets/css/TransactionStatusBadge.css'
 
 interface TransactionStatusBadgeProps {
   status: TransactionStatus

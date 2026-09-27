@@ -1,0 +1,26 @@
+.page-header {
+  margin-bottom: 28px;
+}
+
+.page-header h2 {
+  margin: 0;
+  font-size: 28px;
+}
+
+.page-header p {
+  margin: 8px 0 0;
+  color: #666;
+  font-size: 14px;
+}
+
+@media (max-width: 600px) {
+  .page-header h2 {
+    font-size: 24px;
+  }
+
+  .page-header p {
+    line-height: 1.5;
+    max-width: 100%;
+    font-size: 14px;
+  }
+}

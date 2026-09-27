@@ -1,3 +1,7 @@
+import '../assets/css/ErrorState.css'
+
+
+
 interface ErrorStateProps {
   message?: string
 }

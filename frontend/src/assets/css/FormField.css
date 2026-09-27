@@ -1,0 +1,25 @@
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+
+.form-field label {
+  font-weight: 600;
+}
+
+.form-field-error {
+  color: #b42318;
+  font-size: 14px;
+}
+
+.form-field-required {
+  color: #b42318;
+}
+
+@media (max-width: 600px) {
+  .form-field {
+    margin-bottom: 18px;
+  }
+}

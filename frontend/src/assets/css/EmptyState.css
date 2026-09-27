@@ -1,0 +1,11 @@
+.empty-state {
+  padding: 32px 16px;
+  color: #666;
+  text-align: center;
+}
+
+.empty-state p {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.5;
+}

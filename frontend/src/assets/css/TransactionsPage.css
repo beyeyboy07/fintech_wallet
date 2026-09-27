@@ -1,0 +1,40 @@
+.transactions-page {
+  width: 100%;
+}
+
+.transactions-page .transactions-list {
+  width: 100%;
+  max-width: 800px;
+}
+
+/* Pagination */
+
+.transactions-page .pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  max-width: 800px;
+  margin-top: 24px;
+}
+
+.transactions-page .pagination span {
+  min-width: 180px;
+  color: #555;
+  font-size: 14px;
+  text-align: center;
+}
+
+/* Mobile */
+
+@media (max-width: 600px) {
+  .transactions-page .pagination {
+    gap: 10px;
+  }
+
+  .transactions-page .pagination span {
+    min-width: 0;
+    font-size: 13px;
+    line-height: 1.4;
+  }
+}

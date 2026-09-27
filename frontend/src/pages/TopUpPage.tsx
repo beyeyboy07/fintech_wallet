@@ -86,7 +86,7 @@ function TopUpPage() {
   }
 
   return (
-    <section>
+    <section className="top-up-page">
       <PageHeader
         title="Top Up"
         description="Add balance to your wallet."

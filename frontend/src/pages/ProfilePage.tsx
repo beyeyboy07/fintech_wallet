@@ -11,7 +11,7 @@ function ProfilePage() {
   }
 
   return (
-    <section>
+    <section className="profile-page">
       <PageHeader
         title="Profile"
         description="View your account information."

@@ -1,0 +1,24 @@
+.top-up-page {
+  width: 100%;
+}
+
+.top-up-page .card {
+  width: 100%;
+  max-width: 600px;
+}
+
+.top-up-page .form-actions {
+  margin-top: 16px;
+}
+
+.top-up-page .loading {
+  padding: 16px 0 0;
+}
+
+/* Mobile */
+
+@media (max-width: 600px) {
+  .top-up-page .card {
+    width: 100%;
+  }
+}

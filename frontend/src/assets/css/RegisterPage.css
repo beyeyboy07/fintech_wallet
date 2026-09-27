@@ -1,0 +1,35 @@
+.register-page h2 {
+  margin: 0;
+  font-size: 28px;
+}
+
+.register-page .auth-description {
+  margin: 8px 0 24px;
+  color: #666;
+}
+
+.register-page .auth-link {
+  margin-top: 24px;
+  color: #666;
+}
+
+.register-page .auth-link a {
+  color: inherit;
+  font-weight: 600;
+}
+
+.register-page .auth-link a:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+@media (max-width: 600px) {
+  .register-page h2 {
+    font-size: 24px;
+  }
+
+  .register-page .auth-description,
+  .register-page .auth-link {
+    line-height: 1.5;
+  }
+}

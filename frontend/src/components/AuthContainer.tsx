@@ -1,4 +1,7 @@
 import type { ReactNode } from 'react'
+import '../assets/css/AuthContainer.css'
+
+
 
 interface AuthContainerProps {
   children: ReactNode

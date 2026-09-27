@@ -1,0 +1,10 @@
+.transaction-type-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background: #f8f9fa;
+  color: #333;
+  font-size: 12px;
+  font-weight: 600;
+}

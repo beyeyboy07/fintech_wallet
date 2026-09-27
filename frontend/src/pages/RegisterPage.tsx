@@ -2,15 +2,13 @@ import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { register } from '../services/authService'
 import { getApiErrorMessage } from '../utils/apiError'
-// import Loading from '../components/Loading'
 import ErrorState from '../components/ErrorState'
 import FormField from '../components/FormField'
 import AuthContainer from '../components/AuthContainer'
 import FormActions from '../components/FormActions'
 import Button from '../components/Button'
 import Input from '../components/Input'
-
-
+import '../assets/css/RegisterPage.css'
 
 function RegisterPage() {
   const navigate = useNavigate()
@@ -24,8 +22,6 @@ function RegisterPage() {
   const [emailError, setEmailError] = useState('')
   const [passwordError, setPasswordError] = useState('')
 
-
-
   async function handleSubmit(
     event: React.FormEvent<HTMLFormElement>,
   ) {
@@ -33,9 +29,6 @@ function RegisterPage() {
     setNameError('')
     setEmailError('')
     setPasswordError('')
-
-
-
 
     if (loading) {
       return
@@ -72,7 +65,7 @@ function RegisterPage() {
       })
 
       navigate('/login')
-      } catch (error) {
+    } catch (error) {
       setError(
         getApiErrorMessage(
           error,
@@ -85,66 +78,83 @@ function RegisterPage() {
   }
 
   return (
-      <AuthContainer>
-        <section>
-          <h2>Register</h2>
-          <p className="auth-description">
-            Create your Fintech Wallet account.
-          </p>
-          <form onSubmit={handleSubmit}>
-           <FormField label="Name" htmlFor="name" error={nameError} required>
-              <Input
-                id="name"
-                type="text"
-                value={name}
-                onChange={(event) => {
-                  setName(event.target.value)
-                  setNameError('')
-                }}
-                maxLength={100}
-                placeholder="Enter your name"
-                autoComplete="name"
-                aria-invalid={Boolean(nameError)}
-                aria-describedby="name-error"
-                required
-              />
-            </FormField>
+    <AuthContainer>
+      <section className="register-page">
+        <h2>Register</h2>
 
-            <FormField label="Email"htmlFor="email"error={emailError} required>
-              <Input
-                id="email"
-                type="email"
-                value={email}
-                onChange={(event) => {
-                  setEmail(event.target.value)
-                  setEmailError('')
-                }}
-                maxLength={150}
-                placeholder="Enter your email"
-                autoComplete="email"
-                aria-invalid={Boolean(nameError)}
-                aria-describedby="name-error"
-                required
-              />
-            </FormField>
+        <p className="auth-description">
+          Create your Fintech Wallet account.
+        </p>
 
-            <FormField label="Password" htmlFor="password" error={passwordError} required>
-              <Input
-                id="password"
-                type="password"
-                value={password}
-                onChange={(event) => {
-                  setPassword(event.target.value)
-                  setPasswordError('')
-                }}
-                maxLength={72}
-                placeholder="Enter your password"
-                autoComplete="new-password"
-                aria-invalid={Boolean(nameError)}
-                aria-describedby="name-error"
-                required
-              />
-            </FormField>
+        <form onSubmit={handleSubmit}>
+          <FormField
+            label="Name"
+            htmlFor="name"
+            error={nameError}
+            required
+          >
+            <Input
+              id="name"
+              type="text"
+              value={name}
+              onChange={(event) => {
+                setName(event.target.value)
+                setNameError('')
+              }}
+              maxLength={100}
+              placeholder="Enter your name"
+              autoComplete="name"
+              aria-invalid={Boolean(nameError)}
+              aria-describedby="name-error"
+              required
+            />
+          </FormField>
+
+          <FormField
+            label="Email"
+            htmlFor="email"
+            error={emailError}
+            required
+          >
+            <Input
+              id="email"
+              type="email"
+              value={email}
+              onChange={(event) => {
+                setEmail(event.target.value)
+                setEmailError('')
+              }}
+              maxLength={150}
+              placeholder="Enter your email"
+              autoComplete="email"
+              aria-invalid={Boolean(emailError)}
+              aria-describedby="email-error"
+              required
+            />
+          </FormField>
+
+          <FormField
+            label="Password"
+            htmlFor="password"
+            error={passwordError}
+            required
+          >
+            <Input
+              id="password"
+              type="password"
+              value={password}
+              onChange={(event) => {
+                setPassword(event.target.value)
+                setPasswordError('')
+              }}
+              maxLength={72}
+              placeholder="Enter your password"
+              autoComplete="new-password"
+              aria-invalid={Boolean(passwordError)}
+              aria-describedby="password-error"
+              required
+            />
+          </FormField>
 
           {error && <ErrorState message={error} />}
 
@@ -157,15 +167,14 @@ function RegisterPage() {
               {loading ? 'Registering...' : 'Register'}
             </Button>
           </FormActions>
+        </form>
 
-          {/* {loading && <Loading message="Registering..." />} */}
-          </form>
-
-          <p className="auth-link">
-            Already have an account? <Link to="/login">Login</Link>
-          </p>
-        </section>
-      </AuthContainer>
+        <p className="auth-link">
+          Already have an account?{' '}
+          <Link to="/login">Login</Link>
+        </p>
+      </section>
+    </AuthContainer>
   )
 }
 
