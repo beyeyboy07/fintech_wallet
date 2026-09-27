@@ -1,3 +1,4 @@
+
 .transactions-page {
   width: 100%;
 }
@@ -7,34 +8,65 @@
   max-width: 800px;
 }
 
-/* Pagination */
+.transactions-page .transactions-list .transaction-card:last-child {
+  margin-bottom: 0;
+}
 
 .transactions-page .pagination {
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 16px;
+  justify-content: space-between;
+
+  gap: 24px;
+
+  width: 100%;
   max-width: 800px;
+
   margin-top: 24px;
+  padding-top: 20px;
+
+  border-top: 1px solid #e7eaf0;
 }
 
 .transactions-page .pagination span {
-  min-width: 180px;
-  color: #555;
-  font-size: 14px;
+  flex: 1;
+
+  color: #6b7280;
+
+  font-size: 13px;
+  font-weight: 500;
+
+  line-height: 1.4;
+
   text-align: center;
 }
 
-/* Mobile */
+.transactions-page .pagination .button {
+  flex-shrink: 0;
+
+  min-width: 100px;
+  padding: 0 16px;
+}
+
+/* =========================
+   Mobile
+========================= */
 
 @media (max-width: 600px) {
   .transactions-page .pagination {
     gap: 10px;
+
+    margin-top: 20px;
+    padding-top: 18px;
   }
 
   .transactions-page .pagination span {
-    min-width: 0;
-    font-size: 13px;
-    line-height: 1.4;
+    font-size: 12px;
+    white-space: nowrap;
+  }
+
+  .transactions-page .pagination .button {
+    min-width: 82px;
+    padding: 0 10px;
   }
 }

@@ -1,35 +1,69 @@
+
+.login-page {
+  width: 100%;
+}
+
 .login-page h2 {
   margin: 0;
+
+  color: #111827;
+
   font-size: 28px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  line-height: 1.25;
 }
 
 .login-page .auth-description {
-  margin: 8px 0 24px;
-  color: #666;
+  margin: 8px 0 28px;
+
+  color: #6b7280;
+
+  font-size: 14px;
+  line-height: 1.5;
 }
 
 .login-page .auth-link {
-  margin-top: 24px;
-  color: #666;
+  margin: 24px 0 0;
+
+  color: #6b7280;
+
+  font-size: 14px;
+  line-height: 1.5;
+
+  text-align: center;
 }
 
 .login-page .auth-link a {
-  color: inherit;
+  color: #2563eb;
+
   font-weight: 600;
+  text-decoration: none;
+
+  transition: color 0.15s ease;
 }
 
 .login-page .auth-link a:hover {
+  color: #1d4ed8;
+
   text-decoration: underline;
   text-underline-offset: 3px;
+}
+
+.login-page .auth-link a:focus-visible {
+  outline: 2px solid #2563eb;
+  outline-offset: 3px;
+
+  border-radius: 2px;
 }
 
 @media (max-width: 600px) {
   .login-page h2 {
     font-size: 24px;
+    letter-spacing: -0.3px;
   }
 
-  .login-page .auth-description,
-  .login-page .auth-link {
-    line-height: 1.5;
+  .login-page .auth-description {
+    margin-bottom: 24px;
   }
 }

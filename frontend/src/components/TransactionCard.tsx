@@ -1,3 +1,4 @@
+
 import type { Transaction } from '../types/transaction'
 import { formatCurrency } from '../utils/currency'
 import { formatDate } from '../utils/date'
@@ -16,9 +17,7 @@ function TransactionCard({
   return (
     <Card className="transaction-card">
       <div className="transaction-card-header">
-        <strong>
-          <TransactionTypeBadge type={transaction.type} />
-        </strong>
+        <TransactionTypeBadge type={transaction.type} />
 
         <TransactionStatusBadge
           status={transaction.status}
@@ -30,23 +29,36 @@ function TransactionCard({
       </p>
 
       <div className="transaction-details">
-        <p>
-          <strong>Date:</strong>{' '}
-          {formatDate(transaction.created_at)}
-        </p>
+        <div className="transaction-detail">
+          <span className="transaction-detail-label">
+            Date
+          </span>
 
-        <p>
-          <strong>Reference:</strong>{' '}
-          {transaction.reference}
-        </p>
+          <span className="transaction-detail-value">
+            {formatDate(transaction.created_at)}
+          </span>
+        </div>
 
-        <p>
-          <strong>Description:</strong>{' '}
-          {transaction.description || '-'}
-        </p>
+        <div className="transaction-detail">
+          <span className="transaction-detail-label">
+            Reference
+          </span>
+
+          <span className="transaction-detail-value transaction-reference">
+            {transaction.reference}
+          </span>
+        </div>
+
+        <div className="transaction-detail">
+          <span className="transaction-detail-label">
+            Description
+          </span>
+
+          <span className="transaction-detail-value">
+            {transaction.description || '-'}
+          </span>
+        </div>
       </div>
-
-      <hr className="transaction-card-divider" />
     </Card>
   )
 }

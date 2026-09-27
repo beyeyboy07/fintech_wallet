@@ -1,21 +1,44 @@
+
 .form-field {
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  margin-bottom: 16px;
+  gap: 7px;
+
+  margin-bottom: 18px;
 }
 
 .form-field label {
+  color: #374151;
+  font-size: 13px;
   font-weight: 600;
+  line-height: 1.4;
+  transition: color 0.15s ease;
 }
+
+/* Focus indicator */
+
+.form-field:focus-within label {
+  color: #2563eb;
+}
+
+/* Validation error */
 
 .form-field-error {
   color: #b42318;
-  font-size: 14px;
+  font-size: 12px;
+  line-height: 1.4;
 }
 
+/* Required indicator */
+
 .form-field-required {
-  color: #b42318;
+  color: #dc2626;
+}
+
+/* Accessibility */
+
+.form-field label {
+  cursor: pointer;
 }
 
 @media (max-width: 600px) {

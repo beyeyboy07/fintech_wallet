@@ -12,6 +12,8 @@ import Button from '../components/Button'
 import Card from '../components/Card'
 import Input from '../components/Input'
 import Textarea from '../components/Textarea'
+import BackButton from '../components/BackButton'
+
 
 const MAX_TOP_UP_AMOUNT = 100000000
 
@@ -87,6 +89,7 @@ function TopUpPage() {
 
   return (
     <section className="top-up-page">
+      <BackButton />
       <PageHeader
         title="Top Up"
         description="Add balance to your wallet."

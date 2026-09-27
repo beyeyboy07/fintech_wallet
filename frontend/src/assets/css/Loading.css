@@ -1,4 +1,12 @@
+
 .loading {
+  width: 100%;
   padding: 24px;
+
+  color: #6b7280;
+
+  font-size: 14px;
+  line-height: 1.5;
+
   text-align: center;
 }

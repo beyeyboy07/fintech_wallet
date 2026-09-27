@@ -2,6 +2,7 @@ import { useAuthStore } from '../stores/authStore'
 import PageHeader from '../components/PageHeader'
 import Card from '../components/Card'
 import ErrorState from '../components/ErrorState'
+import BackButton from '../components/BackButton'
 
 function ProfilePage() {
   const user = useAuthStore((state) => state.user)
@@ -12,6 +13,8 @@ function ProfilePage() {
 
   return (
     <section className="profile-page">
+      <BackButton />
+
       <PageHeader
         title="Profile"
         description="View your account information."

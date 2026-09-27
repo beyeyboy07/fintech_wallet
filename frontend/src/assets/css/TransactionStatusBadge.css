@@ -1,34 +1,48 @@
+
 .status-pending,
 .status-processing,
 .status-success,
 .status-failed,
 .status-cancelled,
 .status-expired {
-  display: inline-block;
-  padding: 2px 8px;
-  border-radius: 4px;
-  font-size: 12px;
+  display: inline-flex;
+  align-items: center;
+
+  min-height: 26px;
+  padding: 0 9px;
+
+  border: 1px solid transparent;
+  border-radius: 999px;
+
+  font-size: 11px;
   font-weight: 600;
+  line-height: 1;
+
+  white-space: nowrap;
 }
 
 .status-pending {
-  background: #fff3cd;
-  color: #856404;
+  background: #fffbeb;
+  border-color: #fde68a;
+  color: #92400e;
 }
 
 .status-processing {
-  background: #cfe2ff;
-  color: #084298;
+  background: #eff6ff;
+  border-color: #bfdbfe;
+  color: #1d4ed8;
 }
 
 .status-success {
-  background: #d1e7dd;
-  color: #0f5132;
+  background: #ecfdf3;
+  border-color: #a7f3d0;
+  color: #047857;
 }
 
 .status-failed,
 .status-cancelled,
 .status-expired {
-  background: #f8d7da;
-  color: #842029;
+  background: #fef2f2;
+  border-color: #fecaca;
+  color: #b42318;
 }

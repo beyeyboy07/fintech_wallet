@@ -1,41 +1,82 @@
+
 .button {
-  padding: 10px 16px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
+  min-height: 42px;
+  padding: 0 16px;
+
+  border: 1px solid transparent;
+  border-radius: 8px;
+
   font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+
   cursor: pointer;
+
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease,
+    color 0.15s ease,
+    box-shadow 0.15s ease,
+    transform 0.15s ease;
 }
 
+/* Primary */
+
 .button-primary {
-  background: #111;
+  background: #2563eb;
   color: #fff;
-  border-color: #111;
+  border-color: #2563eb;
 }
+
+.button-primary:hover:not(:disabled) {
+  background: #1d4ed8;
+  border-color: #1d4ed8;
+  box-shadow: 0 4px 10px rgba(37, 99, 235, 0.18);
+  transform: translateY(-1px);
+}
+
+/* Secondary */
 
 .button-secondary {
   background: #fff;
-  color: #111;
+  color: #374151;
+  border-color: #e5e7eb;
 }
+
+.button-secondary:hover:not(:disabled) {
+  background: #f9fafb;
+  border-color: #d1d5db;
+  color: #111827;
+}
+
+/* Danger */
 
 .button-danger {
   background: #fff;
   color: #b42318;
-  border-color: #b42318;
+  border-color: #fecaca;
 }
 
-.button:hover:not(:disabled) {
-  opacity: 0.9;
+.button-danger:hover:not(:disabled) {
+  background: #fef2f2;
+  border-color: #fca5a5;
 }
+
+/* Disabled */
 
 .button:disabled {
   cursor: not-allowed;
-  opacity: 0.6;
+  opacity: 0.55;
 }
 
+/* Focus */
+
 .button:focus-visible {
-  outline: 2px solid #111;
+  outline: 2px solid #2563eb;
   outline-offset: 2px;
 }
+
+/* Mobile */
 
 @media (max-width: 600px) {
   .form-actions .button {

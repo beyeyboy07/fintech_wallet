@@ -59,19 +59,80 @@ function DashboardPage() {
       />
 
       <Card className="balance-card">
-        <p className="balance-label">Wallet Balance</p>
+        <div className="balance-card-header">
+          <p className="balance-label">Wallet Balance</p>
+          <span className="balance-brand">DANQIVA</span>
+        </div>
 
         <h3 className="balance-amount">
           {wallet
             ? formatCurrency(wallet.balance)
             : formatCurrency(0)}
         </h3>
+
+        <p className="balance-caption">
+          Available balance
+        </p>
       </Card>
 
+
+
       <div className="quick-actions">
-        <Link to="/top-up">Top Up</Link>
-        <Link to="/transfer">Transfer</Link>
-        <Link to="/transactions">Transactions</Link>
+        <Link to="/top-up">
+          <span className="quick-action-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none">
+              <path
+                d="M12 5v14M5 12h14"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+              />
+            </svg>
+          </span>
+
+          <span className="quick-action-content">
+            <strong>Top Up</strong>
+            <small>Add balance</small>
+          </span>
+        </Link>
+
+        <Link to="/transfer">
+          <span className="quick-action-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none">
+              <path
+                d="M4 7h13M13 4l3 3-3 3M20 17H7M11 14l-3 3 3 3"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          </span>
+
+          <span className="quick-action-content">
+            <strong>Transfer</strong>
+            <small>Send money</small>
+          </span>
+        </Link>
+
+        <Link to="/transactions">
+          <span className="quick-action-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none">
+              <path
+                d="M6 4h12v16H6zM9 8h6M9 12h6M9 16h4"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          </span>
+
+          <span className="quick-action-content">
+            <strong>Transactions</strong>
+            <small>View activity</small>
+          </span>
+        </Link>
       </div>
 
       <section className="dashboard-transactions">

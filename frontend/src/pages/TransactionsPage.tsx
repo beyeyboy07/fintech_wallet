@@ -8,6 +8,8 @@ import EmptyState from '../components/EmptyState'
 import ErrorState from '../components/ErrorState'
 import PageHeader from '../components/PageHeader'
 import Button from '../components/Button'
+import BackButton from '../components/BackButton'
+
 
 function TransactionsPage() {
   const [transactions, setTransactions] = useState<Transaction[]>([])
@@ -66,6 +68,8 @@ function TransactionsPage() {
 
   return (
     <section className="transactions-page">
+      <BackButton />
+
       <PageHeader
         title="Transaction History"
         description="View your wallet transaction history."

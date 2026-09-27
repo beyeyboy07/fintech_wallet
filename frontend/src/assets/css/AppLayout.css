@@ -1,85 +1,216 @@
+
 .app-layout {
   min-height: 100vh;
+  background: #eef4ff;
 }
 
-/* Header */
+.app-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
 
-.app-layout .app-header {
+  background: rgba(255, 255, 255, 0.96);
+
+  border-bottom: 1px solid #e9eaec;
+
+  box-shadow:
+    0 1px 8px rgba(17, 24, 39, 0.03);
+
+  backdrop-filter: blur(10px);
+}
+
+.app-header-inner {
+  width: 100%;
+  max-width: 1200px;
   min-height: 72px;
-  padding: 16px 32px;
+
+  margin: 0 auto;
+  padding: 0 32px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 32px;
 }
 
-/* Logo */
+.app-logo {
+  display: inline-flex;
+  align-items: center;
 
-.app-layout .app-logo {
-  margin: 0;
-  font-size: 22px;
-  font-weight: 700;
-  letter-spacing: -0.3px;
+  flex-shrink: 0;
+
+  text-decoration: none;
 }
 
-/* Navigation */
+.app-logo img {
+  display: block;
 
-.app-layout .app-nav {
-  gap: 6px;
+  width: 100px;
+  height: auto;
+
+  object-fit: contain;
+
+  transition: opacity 0.15s ease;
 }
 
-.app-layout .app-nav a,
-.app-layout .app-nav button {
-  padding: 8px 12px;
-  border-radius: 6px;
+.app-logo:hover img {
+  opacity: 0.9;
+}
+
+.app-nav {
+  display: flex;
+  align-items: center;
+
+  gap: 4px;
+}
+
+.app-nav a {
+  display: inline-flex;
+  align-items: center;
+
+  min-height: 40px;
+  padding: 0 12px;
+
+  border: 1px solid transparent;
+  border-radius: 8px;
+
+  color: #5f6368;
+
   font-size: 14px;
+  font-weight: 500;
+
+  text-decoration: none;
+
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease,
+    border-color 0.15s ease;
 }
 
-.app-layout .app-nav a {
-  border-color: transparent;
+.app-nav a:hover {
+  background: #f4f5f7;
+  color: #111;
 }
 
-.app-layout .app-nav a:hover {
-  border-color: #ddd;
-}
-
-.app-layout .app-nav a.active {
-  border-color: #111;
-  background: #111;
+.app-nav a.active {
+  background: #2563eb;
   color: #fff;
 }
 
-/* Logout */
-
-.app-layout .app-nav .button-secondary {
-  margin-left: 6px;
+.app-nav .button-secondary {
+  margin-left: 8px;
 }
 
-/* Main */
+.app-menu-toggle {
+  display: none;
+
+  width: 40px;
+  height: 40px;
+  padding: 8px;
+
+  border: 1px solid #e1e3e6;
+  border-radius: 8px;
+
+  background: #fff;
+
+  cursor: pointer;
+}
+
+.app-menu-toggle span {
+  display: block;
+
+  width: 100%;
+  height: 2px;
+
+  margin: 4px 0;
+
+  background: #111;
+
+  border-radius: 2px;
+}
+
+.app-menu-toggle:focus-visible {
+  outline: 2px solid #2563eb;
+  outline-offset: 2px;
+}
 
 .app-layout main {
   width: 100%;
 }
 
-/* Mobile */
+/* =========================
+   Tablet / Mobile
+========================= */
 
-@media (max-width: 600px) {
-  .app-layout .app-header {
-    min-height: auto;
-    padding: 16px;
+@media (max-width: 800px) {
+  .app-header-inner {
+    min-height: 64px;
+    padding: 0 20px;
   }
 
-  .app-layout .app-logo {
-    font-size: 20px;
+  .app-logo img {
+    width: 100px;
   }
 
-  .app-layout .app-nav {
+  .app-menu-toggle {
+    display: block;
+  }
+
+  .app-nav {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+
+    display: none;
+    flex-direction: column;
+    align-items: stretch;
+
+    gap: 4px;
+
+    padding: 12px 20px 16px;
+
+    background: #fff;
+
+    border-bottom: 1px solid #e9eaec;
+
+    box-shadow:
+      0 8px 20px rgba(0, 0, 0, 0.06);
+  }
+
+  .app-nav.open {
+    display: flex;
+  }
+
+  .app-nav a {
     width: 100%;
-    gap: 6px;
+    min-height: 44px;
+
+    padding: 0 14px;
   }
 
-  .app-layout .app-nav a,
-  .app-layout .app-nav button {
-    padding: 8px 10px;
+  .app-nav .button-secondary {
+    width: 100%;
+    margin: 8px 0 0;
+  }
+}
+
+/* =========================
+   Small Mobile
+========================= */
+
+@media (max-width: 480px) {
+  .app-header-inner {
+    padding: 0 16px;
   }
 
-  .app-layout .app-nav .button-secondary {
-    margin-left: 0;
+  .app-logo img {
+    width: 80px;
+  }
+
+  .app-nav {
+    padding-right: 16px;
+    padding-left: 16px;
   }
 }

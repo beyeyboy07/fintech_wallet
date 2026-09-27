@@ -1,3 +1,4 @@
+
 .transfer-page {
   width: 100%;
 }
@@ -7,14 +8,60 @@
   max-width: 600px;
 }
 
-.transfer-page .form-actions {
-  margin-top: 16px;
+/* =========================
+   Receiver ID
+========================= */
+
+.transfer-page .form-field:first-child .input {
+  min-height: 46px;
 }
 
-/* Mobile */
+/* =========================
+   Amount
+========================= */
+
+.transfer-page .form-field:nth-child(2) .input {
+  min-height: 48px;
+
+  font-size: 16px;
+  font-weight: 600;
+}
+
+/* =========================
+   Description
+========================= */
+
+.transfer-page .textarea {
+  min-height: 110px;
+}
+
+/* =========================
+   Error
+========================= */
+
+.transfer-page .error-state {
+  margin-top: 4px;
+  margin-bottom: 16px;
+}
+
+/* =========================
+   Actions
+========================= */
+
+.transfer-page .form-actions {
+  margin-top: 20px;
+}
+
+/* =========================
+   Responsive
+========================= */
 
 @media (max-width: 600px) {
   .transfer-page .card {
     width: 100%;
+  }
+
+  .transfer-page .form-actions {
+    margin-top: 16px;
   }
 }

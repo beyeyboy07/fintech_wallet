@@ -1,24 +1,51 @@
+
 .input {
   width: 100%;
   max-width: 400px;
-  padding: 10px 12px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  font: inherit;
-}
+  min-height: 44px;
 
-.input:focus {
+  padding: 0 13px;
+
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+
   outline: none;
+
+  background: #fff;
+  color: #111827;
+
+  font: inherit;
+  font-size: 14px;
+
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
 }
 
+.input::placeholder {
+  color: #9ca3af;
+}
+
+.input:hover:not(:focus) {
+  border-color: #9ca3af;
+}
+
+.input:focus,
 .input:focus-visible {
-  outline: 2px solid #111;
-  outline-offset: 2px;
-  border-color: #666;
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.input:disabled {
+  background: #f9fafb;
+  color: #6b7280;
+  cursor: not-allowed;
 }
 
 @media (max-width: 600px) {
   .input {
     max-width: 100%;
+    min-height: 44px;
   }
 }
