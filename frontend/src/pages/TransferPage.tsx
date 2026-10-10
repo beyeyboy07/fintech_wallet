@@ -99,7 +99,7 @@ function TransferPage() {
           amount: numericAmount,
           description: trimmedDescription || undefined,
         },
-        crypto.randomUUID(),
+        `${Date.now()}-${Math.random().toString(16).slice(2)}-${Math.random().toString(16).slice(2)}`,
       )
 
       navigate('/')

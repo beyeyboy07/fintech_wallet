@@ -30,7 +30,10 @@ func SetupRouter(
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	router.Use(cors.New(cors.Config{
-		AllowOrigins:     []string{"http://localhost:5173"},
+		AllowOrigins: []string{
+                             "http://localhost:5173",
+                             "http://139.190.99.205",
+                             },
 		AllowMethods:     []string{"GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"},
 		AllowHeaders:     []string{"Origin", "Content-Type", "Authorization", "Idempotency-Key"},
 		AllowCredentials: true,
@@ -46,7 +49,7 @@ func SetupRouter(
 	outboxRepository := repository.NewOutboxRepository(db)
 	webhookRepository := repository.NewWebhookRepository(db)
 	transactionRepository := repository.NewTransactionRepository(db)
-	transactionEntryRepository := repository.NewTransactionEntryRepository(db)
+       transactionEntryRepository := repository.NewTransactionEntryRepository(db)
 
 	webhookService := service.NewWebhookService(
 		db,

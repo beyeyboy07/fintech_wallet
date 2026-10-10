@@ -7,6 +7,7 @@ import { useAuthStore } from '../stores/authStore'
 import PageContainer from '../components/PageContainer'
 import Button from '../components/Button'
 import '../assets/css/AppLayout.css'
+import logo from "../assets/images/1.png";
 
 interface AppLayoutProps {
   children: ReactNode
@@ -47,7 +48,7 @@ function AppLayout({ children }: AppLayoutProps) {
             className="app-logo"
             onClick={closeMenu}
           >
-            <img src="../src/assets/images/1.png" alt="DANQIVA" />
+            <img src={logo} alt="DANQIVA" />
           </NavLink>
 
           <button
