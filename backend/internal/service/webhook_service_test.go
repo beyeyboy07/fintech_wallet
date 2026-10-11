@@ -12,14 +12,32 @@ import (
 func TestWebhookDuplicate(t *testing.T) {
 	t.Setenv("JWT_SECRET", "test-secret")
 	t.Setenv("DB_HOST", "localhost")
-	t.Setenv("DB_PORT", "3306")
+	t.Setenv("DB_PORT", "3307")
 	t.Setenv("DB_USER", "root")
-	t.Setenv("DB_PASSWORD", "")
-	t.Setenv("DB_NAME", "fintech_wallet")
+	t.Setenv("DB_PASSWORD", "root")
+	t.Setenv("DB_NAME", "fintech_wallet_test")
 
 	cfg := config.Load()
 
 	db, err := database.Connect(cfg)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	sqlDB, err := db.DB()
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	var databaseName string
+	err = sqlDB.QueryRow("SELECT DATABASE()").Scan(&databaseName)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	t.Logf("TEST DATABASE: %s", databaseName)
+
+	err = database.Migrate(db)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -331,8 +349,9 @@ func TestWebhookSuccessUpdatesWalletAndTransaction(t *testing.T) {
 	// 	Delete(&model.Wallet{})
 
 	wallet := &model.Wallet{
-		UserID:  userID,
-		Balance: 100000,
+		UserID:        userID,
+		AccountNumber: "8801000000009999",
+		Balance:       100000,
 	}
 
 	err = walletRepository.Create(wallet)

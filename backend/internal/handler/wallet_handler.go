@@ -195,3 +195,66 @@ func (h *WalletHandler) TopUp(c *gin.Context) {
 		transaction,
 	)
 }
+
+type AccountInquiryResponse struct {
+	AccountNumber string `json:"account_number"`
+	AccountName   string `json:"account_name"`
+}
+
+func (h *WalletHandler) InquiryAccount(c *gin.Context) {
+	accountNumber := c.Query("account_number")
+
+	if accountNumber == "" {
+		response.Error(
+			c,
+			http.StatusBadRequest,
+			"Account number is required",
+			"INVALID_ACCOUNT_NUMBER",
+		)
+		return
+	}
+
+	wallet, err := h.walletService.InquiryAccount(accountNumber)
+
+	if err != nil {
+		if errors.Is(err, service.ErrInvalidAccountNumber) {
+			response.Error(
+				c,
+				http.StatusBadRequest,
+				"Account number must contain exactly 16 digits",
+				"INVALID_ACCOUNT_NUMBER",
+			)
+			return
+		}
+
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			response.Error(
+				c,
+				http.StatusNotFound,
+				"Recipient account not found",
+				"ACCOUNT_NOT_FOUND",
+			)
+			return
+		}
+
+		response.Error(
+			c,
+			http.StatusInternalServerError,
+			"Failed to inquire recipient account",
+			"INTERNAL_SERVER_ERROR",
+		)
+		return
+	}
+
+	result := AccountInquiryResponse{
+		AccountNumber: wallet.AccountNumber,
+		AccountName:   wallet.User.Name,
+	}
+
+	response.Success(
+		c,
+		http.StatusOK,
+		"Recipient account retrieved successfully",
+		result,
+	)
+}

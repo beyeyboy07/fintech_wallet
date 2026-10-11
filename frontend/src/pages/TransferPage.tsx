@@ -1,4 +1,5 @@
-import { useState } from 'react'
+
+import { useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { transfer } from '../services/transferService'
 import { getApiErrorMessage } from '../utils/apiError'
@@ -12,16 +13,30 @@ import Input from '../components/Input'
 import Textarea from '../components/Textarea'
 import BackButton from '../components/BackButton'
 
+interface PendingTransfer {
+  signature: string
+  idempotencyKey: string
+}
+
+function createIdempotencyKey(): string {
+  if (typeof crypto !== 'undefined' && crypto.randomUUID) {
+    return crypto.randomUUID()
+  }
+
+  return `${Date.now()}-${Math.random().toString(16).slice(2)}`
+}
 
 function TransferPage() {
   const navigate = useNavigate()
 
-  const [receiverId, setReceiverId] = useState('')
+  const pendingTransfer = useRef<PendingTransfer | null>(null)
+
+  const [accountNumber, setAccountNumber] = useState('')
   const [amount, setAmount] = useState('')
   const [description, setDescription] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
-  const [receiverIdError, setReceiverIdError] = useState('')
+  const [accountNumberError, setAccountNumberError] = useState('')
   const [amountError, setAmountError] = useState('')
 
   async function handleSubmit(
@@ -29,79 +44,81 @@ function TransferPage() {
   ) {
     event.preventDefault()
 
-    setReceiverIdError('')
+    setAccountNumberError('')
     setAmountError('')
 
     if (loading) {
       return
     }
 
-    const numericReceiverId = Number(receiverId)
-    const numericAmount = Number(amount)
+    const trimmedAccountNumber = accountNumber.trim()
+    const trimmedAmount = amount.trim()
+    const trimmedDescription = description.trim()
 
-    if (!receiverId.trim()) {
-      setReceiverIdError('Receiver ID wajib diisi.')
-    }
+    let isValid = true
 
-    if (!amount.trim()) {
-      setAmountError('Amount wajib diisi.')
-    }
-
-    if (
-      !receiverId.trim() ||
-      !amount.trim()
-    ) {
-      return
-    }
-
-    if (
-      !Number.isInteger(numericReceiverId) ||
-      numericReceiverId <= 0
-    ) {
-      setReceiverIdError(
-        'Receiver ID harus berupa angka bulat lebih dari 0.',
+    if (!trimmedAccountNumber) {
+      setAccountNumberError('Account number wajib diisi.')
+      isValid = false
+    } else if (!/^\d{16}$/.test(trimmedAccountNumber)) {
+      setAccountNumberError(
+        'Account number harus terdiri dari tepat 16 digit angka.',
       )
+      isValid = false
     }
 
-    if (
-      !Number.isInteger(numericAmount) ||
+    const numericAmount = Number(trimmedAmount)
+
+    if (!trimmedAmount) {
+      setAmountError('Amount wajib diisi.')
+      isValid = false
+    } else if (
+      !Number.isSafeInteger(numericAmount) ||
       numericAmount <= 0
     ) {
       setAmountError(
         'Amount harus berupa angka bulat lebih dari 0.',
       )
+      isValid = false
     }
 
-    if (
-      !Number.isInteger(numericReceiverId) ||
-      numericReceiverId <= 0 ||
-      !Number.isInteger(numericAmount) ||
-      numericAmount <= 0
-    ) {
+    if (!isValid) {
       return
     }
-
-    setError('')
-
-    const trimmedDescription = description.trim()
 
     if (trimmedDescription.length > 255) {
       setError('Description maksimal 255 karakter.')
       return
     }
 
+    setError('')
     setLoading(true)
+
+    const requestData = {
+      receiver_account_number: trimmedAccountNumber,
+      amount: numericAmount,
+      description: trimmedDescription || undefined,
+    }
+
+    const signature = JSON.stringify(requestData)
+
+    if (
+      !pendingTransfer.current ||
+      pendingTransfer.current.signature !== signature
+    ) {
+      pendingTransfer.current = {
+        signature,
+        idempotencyKey: createIdempotencyKey(),
+      }
+    }
 
     try {
       await transfer(
-        {
-          receiver_id: numericReceiverId,
-          amount: numericAmount,
-          description: trimmedDescription || undefined,
-        },
-        `${Date.now()}-${Math.random().toString(16).slice(2)}-${Math.random().toString(16).slice(2)}`,
+        requestData,
+        pendingTransfer.current.idempotencyKey,
       )
 
+      pendingTransfer.current = null
       navigate('/')
     } catch (error) {
       setError(
@@ -121,32 +138,36 @@ function TransferPage() {
 
       <PageHeader
         title="Transfer"
-        description="Send balance to another wallet."
+        description="Transfer balance using the recipient's account number."
       />
 
       <Card>
         <form onSubmit={handleSubmit}>
           <FormField
-            label="Receiver ID"
-            htmlFor="receiverId"
-            error={receiverIdError}
+            label="Account Number"
+            htmlFor="accountNumber"
+            error={accountNumberError}
             required
           >
             <Input
-              id="receiverId"
-              type="number"
-              min="1"
-              step="1"
-              value={receiverId}
+              id="accountNumber"
+              type="text"
+              inputMode="numeric"
+              maxLength={16}
+              value={accountNumber}
               onChange={(event) => {
-                setReceiverId(event.target.value)
-                setReceiverIdError('')
-                setError('')
+                const value = event.target.value
+
+                if (/^\d*$/.test(value) && value.length <= 16) {
+                  setAccountNumber(value)
+                  setAccountNumberError('')
+                  setError('')
+                }
               }}
-              placeholder="Enter receiver ID"
+              placeholder="Enter 16-digit account number"
               autoComplete="off"
-              aria-invalid={Boolean(receiverIdError)}
-              aria-describedby="receiverId-error"
+              aria-invalid={Boolean(accountNumberError)}
+              aria-describedby="accountNumber-error"
               required
             />
           </FormField>

@@ -12,16 +12,17 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	"gorm.io/gorm"
 )
 
 func TestProcessTopUpConcurrent(t *testing.T) {
 
 	t.Setenv("JWT_SECRET", "test-secret")
 	t.Setenv("DB_HOST", "localhost")
-	t.Setenv("DB_PORT", "3306")
+	t.Setenv("DB_PORT", "3307")
 	t.Setenv("DB_USER", "root")
-	t.Setenv("DB_PASSWORD", "")
-	t.Setenv("DB_NAME", "fintech_wallet")
+	t.Setenv("DB_PASSWORD", "root")
+	t.Setenv("DB_NAME", "fintech_wallet_test")
 
 	cfg := config.Load()
 
@@ -29,6 +30,43 @@ func TestProcessTopUpConcurrent(t *testing.T) {
 
 	if err != nil {
 		t.Fatal(err)
+	}
+
+	// Siapkan schema database test
+	err = database.Migrate(db)
+	require.NoError(t, err)
+
+	// Siapkan user test
+	user := &model.User{
+		Name:     "Test User",
+		Email:    "topup-concurrent-test@example.com",
+		Password: "test-password",
+		Role:     model.RoleUser,
+	}
+
+	err = db.Where("email = ?", user.Email).First(user).Error
+
+	if err != nil {
+		require.ErrorIs(t, err, gorm.ErrRecordNotFound)
+
+		err = db.Create(user).Error
+		require.NoError(t, err)
+	}
+
+	// Siapkan wallet test
+	wallet := &model.Wallet{
+		UserID:        user.ID,
+		AccountNumber: "8801000000000001",
+		Balance:       100000,
+	}
+
+	err = db.Where("user_id = ?", user.ID).First(wallet).Error
+
+	if err != nil {
+		require.ErrorIs(t, err, gorm.ErrRecordNotFound)
+
+		err = db.Create(wallet).Error
+		require.NoError(t, err)
 	}
 
 	walletRepository := repository.NewWalletRepository(db)
@@ -44,7 +82,8 @@ func TestProcessTopUpConcurrent(t *testing.T) {
 	)
 
 	// Buat wallet test
-	wallet, err := walletRepository.FindByUserID(1)
+	// Ambil wallet milik user test
+	wallet, err = walletRepository.FindByUserID(user.ID)
 	require.NoError(t, err)
 
 	wallet.Balance = 100000
@@ -54,7 +93,7 @@ func TestProcessTopUpConcurrent(t *testing.T) {
 
 	// Buat transaction PENDING
 	transaction := &model.Transaction{
-		UserID:    1,
+		UserID:    user.ID,
 		Type:      "TOPUP",
 		Amount:    50000,
 		Status:    "PENDING",
@@ -75,7 +114,7 @@ func TestProcessTopUpConcurrent(t *testing.T) {
 
 		err := walletService.ProcessTopUp(
 			transaction.ID,
-			1,
+			user.ID,
 			50000,
 		)
 
@@ -87,7 +126,7 @@ func TestProcessTopUpConcurrent(t *testing.T) {
 
 		err := walletService.ProcessTopUp(
 			transaction.ID,
-			1,
+			user.ID,
 			50000,
 		)
 
@@ -103,8 +142,7 @@ func TestProcessTopUpConcurrent(t *testing.T) {
 	}
 
 	// Cek saldo
-	result, err := walletRepository.FindByUserID(1)
-
+	result, err := walletRepository.FindByUserID(user.ID)
 	require.NoError(t, err)
 
 	assert.Equal(

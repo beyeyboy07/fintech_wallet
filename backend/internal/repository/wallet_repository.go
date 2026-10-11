@@ -82,3 +82,21 @@ func (r *WalletRepository) FindByUserIDForUpdate(
 
 	return &wallet, nil
 }
+
+func (r *WalletRepository) FindByAccountNumber(
+	accountNumber string,
+) (*model.Wallet, error) {
+	var wallet model.Wallet
+
+	err := r.db.
+		Where("account_number = ?", accountNumber).
+		Preload("User").
+		First(&wallet).
+		Error
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &wallet, nil
+}

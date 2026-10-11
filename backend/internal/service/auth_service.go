@@ -91,14 +91,37 @@ func (s *AuthService) Register(
 			return err
 		}
 
+		//
 		// Create Wallet
-		wallet := &model.Wallet{
-			UserID:  user.ID,
-			Balance: 0,
+		var wallet *model.Wallet
+
+		for i := 0; i < 5; i++ {
+			accountNumber, err := generateAccountNumber()
+			if err != nil {
+				return err
+			}
+
+			wallet = &model.Wallet{
+				UserID:        user.ID,
+				AccountNumber: accountNumber,
+				Balance:       0,
+			}
+
+			err = walletRepository.Create(wallet)
+			if err == nil {
+				break
+			}
+
+			// Retry hanya jika account number bentrok.
+			if !isAccountNumberDuplicate(err) {
+				return err
+			}
+
+			wallet = nil
 		}
 
-		if err := walletRepository.Create(wallet); err != nil {
-			return err
+		if wallet == nil {
+			return errors.New("failed to generate unique account number")
 		}
 
 		createdUser = user

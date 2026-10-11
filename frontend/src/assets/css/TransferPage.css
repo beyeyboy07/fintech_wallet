@@ -8,53 +8,43 @@
   max-width: 600px;
 }
 
-/* =========================
-   Receiver ID
-========================= */
+/* Account Number */
 
 .transfer-page .form-field:first-child .input {
-  min-height: 46px;
+  min-height: 48px;
+  font-size: 16px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
 }
 
-/* =========================
-   Amount
-========================= */
+/* Amount */
 
 .transfer-page .form-field:nth-child(2) .input {
   min-height: 48px;
-
   font-size: 16px;
   font-weight: 600;
 }
 
-/* =========================
-   Description
-========================= */
+/* Description */
 
 .transfer-page .textarea {
   min-height: 110px;
 }
 
-/* =========================
-   Error
-========================= */
+/* Error */
 
 .transfer-page .error-state {
   margin-top: 4px;
   margin-bottom: 16px;
 }
 
-/* =========================
-   Actions
-========================= */
+/* Actions */
 
 .transfer-page .form-actions {
   margin-top: 20px;
 }
 
-/* =========================
-   Responsive
-========================= */
+/* Responsive */
 
 @media (max-width: 600px) {
   .transfer-page .card {

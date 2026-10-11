@@ -14,6 +14,7 @@ import (
 )
 
 var ErrInvalidTopUpAmount = errors.New("invalid top up amount")
+var ErrInvalidAccountNumber = errors.New("invalid account number")
 
 type WalletService struct {
 	walletRepository      *repository.WalletRepository
@@ -311,4 +312,27 @@ func (s *WalletService) TopUpAsync(
 	}
 
 	return transaction, nil
+}
+
+func (s *WalletService) InquiryAccount(
+	accountNumber string,
+) (*model.Wallet, error) {
+	if len(accountNumber) != 16 {
+		return nil, ErrInvalidAccountNumber
+	}
+
+	for _, char := range accountNumber {
+		if char < '0' || char > '9' {
+			return nil, ErrInvalidAccountNumber
+		}
+	}
+
+	wallet, err := s.walletRepository.FindByAccountNumber(
+		accountNumber,
+	)
+	if err != nil {
+		return nil, err
+	}
+
+	return wallet, nil
 }

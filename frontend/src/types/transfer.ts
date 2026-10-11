@@ -1,8 +1,9 @@
+
 import type { ApiResponse } from './api'
 import type { Transaction } from './transaction'
 
 export interface TransferRequest {
-  receiver_id: number
+  receiver_account_number: string
   amount: number
   description?: string
 }

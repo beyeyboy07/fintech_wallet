@@ -25,9 +25,9 @@ func NewTransferHandler(
 }
 
 type TransferRequest struct {
-	ReceiverID  uint   `json:"receiver_id" binding:"required"`
-	Amount      int64  `json:"amount" binding:"required,gt=0"`
-	Description string `json:"description" binding:"max=255"`
+	ReceiverAccountNumber string `json:"receiver_account_number" binding:"required,len=16,numeric"`
+	Amount                int64  `json:"amount" binding:"required,gt=0"`
+	Description           string `json:"description" binding:"max=255"`
 }
 
 // Transfer godoc
@@ -109,15 +109,23 @@ func (h *TransferHandler) Transfer(c *gin.Context) {
 		return
 	}
 
-	transaction, err := h.transferService.TransferWithIdempotency(
+	transaction, err := h.transferService.TransferWithIdempotencyByAccountNumber(
 		senderID,
-		request.ReceiverID,
+		request.ReceiverAccountNumber,
 		request.Amount,
 		request.Description,
 		idempotencyKey,
 	)
 
 	if err != nil {
+
+		if errors.Is(err, service.ErrInvalidAccountNumber) {
+			c.JSON(http.StatusBadRequest, gin.H{
+				"code":    "INVALID_ACCOUNT_NUMBER",
+				"message": "Invalid account number",
+			})
+			return
+		}
 
 		if errors.Is(err, service.ErrIdempotencyKeyRequired) {
 			response.Error(

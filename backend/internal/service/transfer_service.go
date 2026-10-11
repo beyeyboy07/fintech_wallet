@@ -340,3 +340,42 @@ func (s *TransferService) TransferWithIdempotency(
 
 	return transaction, nil
 }
+
+func (s *TransferService) TransferWithIdempotencyByAccountNumber(
+	senderID uint,
+	receiverAccountNumber string,
+	amount int64,
+	description string,
+	idempotencyKey string,
+) (*model.Transaction, error) {
+
+	if len(receiverAccountNumber) != 16 {
+		return nil, ErrInvalidAccountNumber
+	}
+
+	for _, char := range receiverAccountNumber {
+		if char < '0' || char > '9' {
+			return nil, ErrInvalidAccountNumber
+		}
+	}
+
+	receiverWallet, err := s.walletRepository.FindByAccountNumber(
+		receiverAccountNumber,
+	)
+
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, ErrReceiverNotFound
+		}
+
+		return nil, err
+	}
+
+	return s.TransferWithIdempotency(
+		senderID,
+		receiverWallet.UserID,
+		amount,
+		description,
+		idempotencyKey,
+	)
+}
