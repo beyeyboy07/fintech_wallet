@@ -71,6 +71,7 @@ func TestTransferConcurrent(t *testing.T) {
 			_, err := transferService.Transfer(
 				2,
 				3,
+				"999",
 				80000,
 				"Concurrent transfer 1",
 			)
@@ -84,6 +85,7 @@ func TestTransferConcurrent(t *testing.T) {
 			_, err := transferService.Transfer(
 				2,
 				4,
+				"999",
 				80000,
 				"Concurrent transfer 2",
 			)

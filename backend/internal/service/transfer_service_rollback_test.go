@@ -107,6 +107,7 @@ func TestTransferRollback(t *testing.T) {
 	_, err = transferService.Transfer(
 		2,
 		3,
+		"999",
 		80000,
 		"Rollback test",
 	)

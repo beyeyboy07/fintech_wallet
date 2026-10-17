@@ -49,6 +49,7 @@ func NewTransferService(
 func (s *TransferService) Transfer(
 	senderID uint,
 	receiverID uint,
+	receiverAccountNumber string,
 	amount int64,
 	description string,
 ) (*model.Transaction, error) {
@@ -69,6 +70,7 @@ func (s *TransferService) Transfer(
 		transaction, err = s.transferInTransaction(
 			tx,
 			senderID,
+			receiverAccountNumber,
 			receiverID,
 			amount,
 			description,
@@ -92,6 +94,7 @@ func (s *TransferService) Transfer(
 func (s *TransferService) transferInTransaction(
 	tx *gorm.DB,
 	senderID uint,
+	receiverAccountNumber string,
 	receiverID uint,
 	amount int64,
 	description string,
@@ -155,14 +158,15 @@ func (s *TransferService) transferInTransaction(
 	receiverIDValue := receiverID
 
 	transaction := &model.Transaction{
-		UserID:      senderID,
-		SenderID:    &senderIDValue,
-		ReceiverID:  &receiverIDValue,
-		Type:        "TRANSFER",
-		Amount:      amount,
-		Status:      "SUCCESS",
-		Reference:   reference,
-		Description: description,
+		UserID:        senderID,
+		SenderID:      &senderIDValue,
+		ReceiverID:    &receiverIDValue,
+		AccountNumber: receiverAccountNumber,
+		Type:          "TRANSFER",
+		Amount:        amount,
+		Status:        "SUCCESS",
+		Reference:     reference,
+		Description:   description,
 	}
 
 	err = transactionRepository.Create(transaction)
@@ -200,6 +204,7 @@ func (s *TransferService) transferInTransaction(
 
 func (s *TransferService) TransferWithIdempotency(
 	senderID uint,
+	receiverAccountNumber string,
 	receiverID uint,
 	amount int64,
 	description string,
@@ -312,6 +317,7 @@ func (s *TransferService) TransferWithIdempotency(
 		transaction, err = s.transferInTransaction(
 			tx,
 			senderID,
+			receiverAccountNumber,
 			receiverID,
 			amount,
 			description,
@@ -373,6 +379,7 @@ func (s *TransferService) TransferWithIdempotencyByAccountNumber(
 
 	return s.TransferWithIdempotency(
 		senderID,
+		receiverAccountNumber,
 		receiverWallet.UserID,
 		amount,
 		description,

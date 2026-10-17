@@ -10,8 +10,9 @@ func TestTransferWithIdempotency_EmptyKey(t *testing.T) {
 
 	_, err := service.TransferWithIdempotency(
 		1,
-		2,
+		"2",
 		1000,
+		99,
 		"Test transfer",
 		"",
 	)
@@ -29,6 +30,7 @@ func TestTransferWithIdempotency_InvalidAmount(t *testing.T) {
 
 	_, err := service.TransferWithIdempotency(
 		1,
+		"",
 		2,
 		0,
 		"Test transfer",
@@ -48,6 +50,7 @@ func TestTransferWithIdempotency_SelfTransfer(t *testing.T) {
 
 	_, err := service.TransferWithIdempotency(
 		1,
+		"09",
 		1,
 		1000,
 		"Test transfer",

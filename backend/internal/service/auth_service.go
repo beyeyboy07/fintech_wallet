@@ -19,6 +19,14 @@ type LoginResult struct {
 	RefreshToken string
 }
 
+type CurrentUserResult struct {
+	ID            uint   `json:"id"`
+	Name          string `json:"name"`
+	Email         string `json:"email"`
+	Role          string `json:"role"`
+	AccountNumber string `json:"account_number"`
+}
+
 type AuthService struct {
 	userRepository         *repository.UserRepository
 	walletRepository       *repository.WalletRepository
@@ -195,9 +203,24 @@ func (s *AuthService) Login(
 
 func (s *AuthService) GetCurrentUser(
 	userID uint,
-) (*model.User, error) {
+) (*CurrentUserResult, error) {
+	user, err := s.userRepository.FindByID(userID)
+	if err != nil {
+		return nil, err
+	}
 
-	return s.userRepository.FindByID(userID)
+	wallet, err := s.walletRepository.FindByUserID(userID)
+	if err != nil {
+		return nil, err
+	}
+
+	return &CurrentUserResult{
+		ID:            user.ID,
+		Name:          user.Name,
+		Email:         user.Email,
+		Role:          string(user.Role),
+		AccountNumber: wallet.AccountNumber,
+	}, nil
 }
 
 func (s *AuthService) Refresh(

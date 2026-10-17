@@ -9,6 +9,7 @@ export interface LoginResponse {
   data: {
     access_token: string
     refresh_token: string
+    account_number: string
   }
 }
 
@@ -17,4 +18,5 @@ export interface User {
   name: string
   email: string
   role: string
+  account_number: string
 }

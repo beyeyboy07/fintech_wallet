@@ -60,7 +60,7 @@ function DashboardPage() {
 
       <Card className="balance-card">
         <div className="balance-card-header">
-          <p className="balance-label">Wallet Balance</p>
+          <p className="balance-label">DANQIVA Cash</p>
           <span className="balance-brand">DANQIVA</span>
         </div>
 

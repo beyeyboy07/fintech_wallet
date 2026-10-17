@@ -58,6 +58,7 @@ func TestTransferCreatesLedgerEntries(t *testing.T) {
 	transaction, err := transferService.Transfer(
 		2,
 		3,
+		"999",
 		80000,
 		"Ledger test",
 	)

@@ -20,7 +20,14 @@ function ProfilePage() {
         description="View your account information."
       />
 
-      <Card className="profile-card">
+      {/* <Card className="profile-card"> */}
+  
+      <Card className="balance-card">
+        <div className="balance-card-header">
+          <p className="balance-label">DANQIVA Cash</p>
+          <span className="balance-brand">DANQIVA</span>
+        </div>
+
         <p>
           <strong>Name:</strong> {user.name}
         </p>
@@ -31,6 +38,10 @@ function ProfilePage() {
 
         <p>
           <strong>Role:</strong> {user.role}
+        </p>
+
+         <p>
+          <strong>Account Number:</strong> {user.account_number}
         </p>
       </Card>
     </section>
