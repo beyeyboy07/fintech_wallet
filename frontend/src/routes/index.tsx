@@ -68,6 +68,9 @@ const router = createBrowserRouter([
       </ProtectedRoute>
     ),
   },
-])
-
+  ],
+  {
+    basename: '/danqiva',
+  }
+)
 export default router
