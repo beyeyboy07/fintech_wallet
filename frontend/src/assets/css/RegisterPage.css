@@ -1,69 +1,37 @@
 
+/* ========================================
+   REGISTER PAGE
+======================================== */
+
 .register-page {
   width: 100%;
 }
 
+.register-page .login-heading {
+  margin-bottom: 30px;
+}
+
 .register-page h2 {
-  margin: 0;
-
-  color: #111827;
-
-  font-size: 28px;
-  font-weight: 700;
-  letter-spacing: -0.5px;
-  line-height: 1.25;
+  margin-top: 0;
 }
 
-.register-page .auth-description {
-  margin: 8px 0 28px;
-
-  color: #6b7280;
-
-  font-size: 14px;
-  line-height: 1.5;
+/* Register form spacing */
+.register-page form {
+  gap: 19px;
 }
 
-.register-page .auth-link {
-  margin: 24px 0 0;
-
-  color: #6b7280;
-
-  font-size: 14px;
-  line-height: 1.5;
-
-  text-align: center;
+/* Register button */
+.register-page form button[type='submit'] {
+  min-height: 48px;
 }
 
-.register-page .auth-link a {
-  color: #2563eb;
-
-  font-weight: 600;
-  text-decoration: none;
-
-  transition: color 0.15s ease;
-}
-
-.register-page .auth-link a:hover {
-  color: #1d4ed8;
-
-  text-decoration: underline;
-  text-underline-offset: 3px;
-}
-
-.register-page .auth-link a:focus-visible {
-  outline: 2px solid #2563eb;
-  outline-offset: 3px;
-
-  border-radius: 2px;
-}
-
-@media (max-width: 600px) {
-  .register-page h2 {
-    font-size: 24px;
-    letter-spacing: -0.3px;
+/* Responsive */
+@media (max-width: 768px) {
+  .register-page .login-heading {
+    margin-bottom: 26px;
   }
 
-  .register-page .auth-description {
-    margin-bottom: 24px;
+  .register-page form {
+    gap: 19px;
   }
 }

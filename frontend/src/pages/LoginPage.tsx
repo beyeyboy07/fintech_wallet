@@ -14,6 +14,7 @@ import Input from '../components/Input'
 import '../assets/css/LoginPage.css'
 import logo from "../assets/images/1.png";
 
+
 function LoginPage() {
   const navigate = useNavigate()
   const setUser = useAuthStore((state) => state.setUser)
@@ -24,6 +25,7 @@ function LoginPage() {
   const [loading, setLoading] = useState(false)
   const [emailError, setEmailError] = useState('')
   const [passwordError, setPasswordError] = useState('')
+  const [showDemoModal, setShowDemoModal] = useState(false)
 
   async function handleSubmit(
     event: React.FormEvent<HTMLFormElement>,
@@ -169,9 +171,9 @@ function LoginPage() {
         <AuthContainer>
           <section className="login-page">
             <div className="login-heading">
-              <span className="login-eyebrow">
+              {/* <span className="login-eyebrow">
                 WELCOME BACK
-              </span>
+              </span> */}
 
               <h2>Welcome back.</h2>
 
@@ -226,7 +228,22 @@ function LoginPage() {
                   aria-describedby="password-error"
                   required
                 />
+
+                <div className="demo-info-trigger">
+                  <span className="demo-info-trigger-icon">i</span>
+                  <span>
+                    Want to try DANQIVA?
+                    <button
+                      type="button"
+                      onClick={() => setShowDemoModal(true)}
+                    >
+                      Get started here
+                    </button>
+                  </span>
+                </div>
               </FormField>
+
+              
 
               {error && <ErrorState message={error} />}
 
@@ -257,6 +274,48 @@ function LoginPage() {
               Your account is protected with secure authentication.
             </div>
           </section>
+
+          {showDemoModal && (
+            <div
+              className="demo-modal-overlay"
+              onClick={() => setShowDemoModal(false)}
+            >
+              <div
+                className="demo-modal"
+                onClick={(event) => event.stopPropagation()}
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="demo-modal-title"
+              >
+
+                <h3 id="demo-modal-title">
+                  About DANQIVA Demo
+                </h3>
+
+                <p>
+                  DANQIVA is a demo financial management application.
+                  You can explore its features without using your
+                  personal email address.
+                </p>
+
+                <div className="demo-modal-note">
+                  <strong>Registration information</strong>
+                  <span>
+                    Simply use any valid email format, such as
+                    demo@example.com, to create an account.
+                  </span>
+                </div>
+
+                <button
+                  type="button"
+                  className="demo-modal-close"
+                  onClick={() => setShowDemoModal(false)}
+                >
+                  Got it
+                </button>
+              </div>
+            </div>
+          )}
         </AuthContainer>
 
         <div className="login-panel-footer">
